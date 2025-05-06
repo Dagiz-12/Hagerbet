@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% load static %}{% block content %}
+<div class="product-container">
+  <div class="product-header">
+    <h1>Auto List</h1>
+  </div>
+
+  {% if products_list %}
+  <ul class="product-list">
+    {% for auto in products_list %}
+    <li>
+      <h3>
+        {{ auto.product_name }}
+        <span class="product-meta">{{ auto.catagories }}</span>
+      </h3>
+      <p>{{ auto.comments }}</p>
+      <div class="product-meta">{{ auto.prics }} birr</div>
+      <div class="product-actions">
+        <a href="{% url 'products:products_update' auto.id %}">Update</a>
+        <a href="{% url 'products:products_delete' auto.id %}">Delete</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>There are no products in the library.</p>
+  {% endif %}
+
+  <div class="form-actions">
+    {% if catagories_count > 0 %}
+    <a href="{% url 'products:products_create' %}" class="btn btn-primary"
+      >Add an auto</a
+    >
+    {% else %}
+    <p class="product-meta">Please add a make before you add an auto.</p>
+    {% endif %}
+    <a href="{% url 'products:catagories_list' %}" class="btn btn-secondary"
+      >View makes ({{ catagories_count }})</a
+    >
+    <a href="{% url 'products:catagories_create' %}" class="btn btn-outline"
+      >Add a make</a
+    >
+  </div>
+</div>
+{% endblock %}

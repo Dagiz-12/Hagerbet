@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Auto Management System{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'products/products.css' %}" />
+    <style>
+      /* Additional global styles can go here */
+      body {
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background-color: #2c3e50;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: white !important;
+      }
+
+      .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        margin-left: 1rem;
+        transition: color 0.2s;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: white;
+      }
+
+      .main-content {
+        padding-bottom: 3rem;
+      }
+
+      footer {
+        background-color: #2c3e50;
+        color: white;
+        padding: 1.5rem 0;
+        margin-top: 3rem;
+        text-align: center;
+      }
+
+      .messages {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .alert {
+        margin: 1rem 0;
+        border-radius: 4px;
+      }
+    </style>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'products:all' %}"
+          >Auto Management</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'products:all' %}">Autos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'products:catagories_list' %}"
+                >Makes</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}
+      <!-- Main content will be inserted here -->
+      {% endblock %}
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; {% now "Y" %} Auto Management System</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hagerbet - Online Shopping</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}" />
+    <script src="{% static 'home/js/cart.js' %}"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <a href="{% url 'home:home' %}">
+          <img
+            src="{% static 'home/images/paladin-6539115_640.png' %}"
+            alt="Hagerbet Logo"
+          />
+        </a>
+      </div>
+
+      <div class="search-bar">
+        <select class="category-dropdown">
+          <option>All</option>
+          {% if categories %} {% for cata in categories %}
+          <option value="{{ cata.name }}">{{ cata.name }}</option>
+          {% endfor %} {% endif %}
+        </select>
+        <input type="text" placeholder="Search Hagerbet" />
+        <button class="search-button">Search</button>
+      </div>
+
+      <div class="nav-icons" id="nav-icons">
+        <div class="nav-icon location">
+          <i class="fas fa-map-marker-alt"></i>
+          <select name="Location" id="location-dropdown">
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Canada">Canada</option>
+            <option value="Germany">Germany</option>
+            <option value="Ethiopia">Ethiopia</option>
+          </select>
+        </div>
+
+        <div class="nav-icon language">
+          <i class="fas fa-globe"></i>
+          <select name="Language" id="language-dropdown">
+            <option>English</option>
+            <option>Spanish</option>
+            <option>French</option>
+            <option>German</option>
+          </select>
+        </div>
+
+        <div class="nav-icon account">
+          <i class="fas fa-user"></i>
+          <div class="dropdown-content">
+            <a href="#">Login</a>
+            <a href="{% url 'users:user_create' %}">Register</a>
+          </div>
+        </div>
+
+        <div class="nav-icon cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
+          <div class="cart-dropdown" id="cart-dropdown">
+            <div class="cart-header">
+              <h4>Your Cart</h4>
+              <button id="close-cart">×</button>
+            </div>
+            <div class="cart-items" id="cart-items">
+              <p class="empty-cart-message">Your cart is empty</p>
+            </div>
+            <div class="cart-total">
+              <span>Total: $<span id="cart-total">0.00</span></span>
+              <button class="checkout-btn">Proceed to Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </nav>
+
+    <!-- Section 1 - Categories -->
+    <section class="section-1">
+      <div class="options">
+        <div class="categories">
+          <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+              <h3>All Categories</h3>
+              <button id="close-sidebar">×</button>
+            </div>
+            <ul>
+              {% if categories %} {% for cata in categories %}
+              <li><a href="#">{{ cata.name }}</a></li>
+              {% endfor %} {% else %}
+              <li>No categories available.</li>
+              {% endif %}
+            </ul>
+          </div>
+          <button id="open-sidebar">All</button>
+        </div>
+        <div class="deals">
+          <a href="#">Hot Deals</a>
+        </div>
+        <div class="customers">
+          <a href="#">Customer Services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slider -->
+    <div class="slider">
+      <div class="slides">
+        <div class="slide">
+          <img src="{% static 'home/images/4.jpg' %}" alt="Slide 1" />
+        </div>
+        <div class="slide">
+          <img src="{% static 'home/images/5.jpg' %}" alt="Slide 2" />
+        </div>
+        <div class="slide">
+          <img src="{% static 'home/images/6.jpg' %}" alt="Slide 3" />
+        </div>
+      </div>
+      <button class="slider-arrow prev-arrow">&lt;</button>
+      <button class="slider-arrow next-arrow">&gt;</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <section class="products-section">
+        <div class="products-grid">
+          {% if products_list %} {% for pro in products_list %}
+          <div class="product-card">
+            <div class="product-image-container">
+              <img
+                src="{{ pro.image.url }}"
+                alt="{{ pro.product_name }}"
+                class="product-image"
+                onerror="this.src='{% static 'home/images/placeholder.png' %}'"
+              />
+            </div>
+            <div class="product-info">
+              <h3>{{ pro.product_name }}</h3>
+              <p>{{ pro.description|truncatechars:100 }}</p>
+              <p class="price">${{ pro.price }}</p>
+              <div class="product-buttons">
+                <button
+                  class="add-to-cart"
+                  data-id="{{ pro.id }}"
+                  data-name="{{ pro.product_name }}"
+                  data-price="{{ pro.price|floatformat:2 }}"
+                  data-image="{{ pro.image.url }}"
+                >
+                  Add to Cart
+                </button>
+                <a
+                  href="{% url 'home:product_detail' pro.slug %}"
+                  class="view-details-btn"
+                >
+                  View Details
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <p>There are no products available.</p>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Links -->
+    <section class="section-4">
+      <div class="something">
+        <a href="#">Trade Assurances</a>
+        <a href="#">Get Support</a>
+        <a href="#">Sell on Hagerbet</a>
+        <a href="#">Get to Know us</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="info">
+        <a href="#">Contact us</a>
+        <a href="#">Sign in</a>
+        <a href="#">About</a>
+      </div>
+      <div class="social-media">
+        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <div class="coop">
+        <p>Hagerbet PLC 2025 ©</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile menu toggle
+        const mobileMenu = document.getElementById("mobile-menu");
+        const navIcons = document.getElementById("nav-icons");
+        if (mobileMenu && navIcons) {
+          mobileMenu.addEventListener("click", function () {
+            navIcons.classList.toggle("active");
+          });
+        }
+
+        // Sidebar toggle
+        const openSidebar = document.getElementById("open-sidebar");
+        const closeSidebar = document.getElementById("close-sidebar");
+        const sidebar = document.getElementById("sidebar");
+
+        if (openSidebar && sidebar) {
+          openSidebar.addEventListener("click", function () {
+            sidebar.style.left = "0";
+          });
+        }
+
+        if (closeSidebar && sidebar) {
+          closeSidebar.addEventListener("click", function () {
+            sidebar.style.left = "-300px";
+          });
+        }
+
+        // Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelector(".slides");
+        const slideElements = document.querySelectorAll(".slide");
+        const totalSlides = slideElements.length;
+        let autoSlideInterval;
+
+        function showNextSlide() {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          updateSlider();
+        }
+
+        function showPrevSlide() {
+          currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+          updateSlider();
+        }
+
+        function updateSlider() {
+          if (slides) {
+            const offset = -currentSlide * 100;
+            slides.style.transform = `translateX(${offset}%)`;
+          }
+        }
+
+        function startAutoSlide() {
+          autoSlideInterval = setInterval(showNextSlide, 5000);
+        }
+
+        // Initialize slider
+        if (slideElements.length > 0) {
+          startAutoSlide();
+
+          // Manual slide controls
+          document
+            .querySelector(".prev-arrow")
+            ?.addEventListener("click", function () {
+              clearInterval(autoSlideInterval);
+              showPrevSlide();
+              startAutoSlide();
+            });
+
+          document
+            .querySelector(".next-arrow")
+            ?.addEventListener("click", function () {
+              clearInterval(autoSlideInterval);
+              showNextSlide();
+              startAutoSlide();
+            });
+
+          // Pause on hover
+          const slider = document.querySelector(".slider");
+          if (slider) {
+            slider.addEventListener("mouseenter", () =>
+              clearInterval(autoSlideInterval)
+            );
+            slider.addEventListener("mouseleave", startAutoSlide);
+          }
+        }
+
+        // Search button placeholder
+        document
+          .querySelector(".search-button")
+          ?.addEventListener("click", function (e) {
+            e.preventDefault();
+            const query = document.querySelector(".search-bar input").value;
+            const notification = document.createElement("div");
+            notification.className = "cart-notification";
+            notification.textContent = `Search for: ${query} (Coming soon)`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+              notification.classList.add("fade-out");
+              setTimeout(() => notification.remove(), 300);
+            }, 2000);
+          });
+      });
+    </script>
+  </body>
+</html>

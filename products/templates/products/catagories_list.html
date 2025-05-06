@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% load static %}{% block content %}
+<div class="product-container">
+  <div class="product-header">
+    <h1>Make List</h1>
+  </div>
+
+  {% if catagories_list %}
+  <ul class="product-list">
+    {% for make in catagories_list %}
+    <li>
+      <h3>{{ make.name }}</h3>
+      <div class="product-actions">
+        <a href="{% url 'products:catagories_update' make.id %}">Update</a>
+        <a href="{% url 'products:catagories_delete' make.id %}">Delete</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>There are no makes in the library.</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <a href="{% url 'products:catagories_create' %}" class="btn btn-primary"
+      >Add a make</a
+    >
+    <a href="{% url 'products:all' %}" class="btn btn-outline">Back to autos</a>
+  </div>
+</div>
+{% endblock %}

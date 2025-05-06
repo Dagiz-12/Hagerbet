@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="product-container">
+  <div class="delete-confirm">
+    <h1>Delete Auto</h1>
+    <p>
+      Are you sure you want to delete <strong>{{ auto }}</strong>? This action
+      cannot be undone.
+    </p>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="form-actions">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a href="{% url 'products:all' %}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

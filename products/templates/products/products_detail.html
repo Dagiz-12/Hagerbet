@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% load static %}{% block content %}
+<div class="product-container">
+  <div class="detail-view">
+    <h1>{{ products.name }}</h1>
+    {% if products.image %}
+    <img src="{{ products.image.url }}" alt="{{ products.name }}" />
+    {% endif %}
+    <p><strong>Price:</strong> {{ products.price }} birr</p>
+    <p><strong>Description:</strong> {{ products.discription }}</p>
+    <div class="form-actions">
+      <a href="{% url 'products:all' %}" class="btn btn-outline"
+        >Back to list</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

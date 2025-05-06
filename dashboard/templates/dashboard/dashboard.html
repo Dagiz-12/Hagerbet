@@ -1,0 +1,437 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Your E-Commerce</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
+  </head>
+  <body>
+    <!-- Mobile Menu Button (visible only on small screens) -->
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-overlay"></div>
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-text">Hagerbet</span>
+          <span class="logo-collapsed">EC</span>
+        </div>
+        <button class="toggle-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-menu">
+        <span class="menu-title">Main</span>
+        <a href="#" class="menu-item active">
+          <i class="fas fa-home menu-icon"></i>
+          <span class="menu-text">Dashboard</span>
+        </a>
+
+        <span class="menu-title">Management</span>
+        <a href="#" class="menu-item">
+          <i class="fas fa-box menu-icon"></i>
+          <span class="menu-text">Products</span>
+          <i class="fas fa-chevron-down menu-icon ml-auto"></i>
+        </a>
+        <div class="submenu">
+          <a href="{% url 'products:products_create' %}" class="submenu-item"
+            >Add New</a
+          >
+          <a href="{% url 'products:catagories_create' %}" class="submenu-item"
+            >Categories</a
+          >
+          <a href="#" class="submenu-item">Reviews</a>
+        </div>
+
+        <a href="#" class="menu-item">
+          <i class="fas fa-shopping-cart menu-icon"></i>
+          <span class="menu-text">Orders</span>
+          <i class="fas fa-chevron-down menu-icon ml-auto"></i>
+        </a>
+        <div class="submenu">
+          <a href="#" class="submenu-item">New Orders</a>
+          <a href="#" class="submenu-item">Order History</a>
+        </div>
+
+        <a href="{% url 'users:main' %}" class="menu-item">
+          <i class="fas fa-users menu-icon"></i>
+          <span class="menu-text">Customers</span>
+        </a>
+
+        <a href="#" class="menu-item">
+          <i class="fas fa-warehouse menu-icon"></i>
+          <span class="menu-text">Inventory</span>
+        </a>
+
+        <span class="menu-title">Marketing</span>
+        <a href="#" class="menu-item">
+          <i class="fas fa-bullhorn menu-icon"></i>
+          <span class="menu-text">Marketing</span>
+          <i class="fas fa-chevron-down menu-icon ml-auto"></i>
+        </a>
+        <div class="submenu">
+          <a href="#" class="submenu-item">Coupons</a>
+          <a href="#" class="submenu-item">Campaigns</a>
+        </div>
+
+        <span class="menu-title">Analytics</span>
+        <a href="#" class="menu-item">
+          <i class="fas fa-chart-line menu-icon"></i>
+          <span class="menu-text">Analytics</span>
+        </a>
+
+        <span class="menu-title">Settings</span>
+        <a href="#" class="menu-item">
+          <i class="fas fa-cog menu-icon"></i>
+          <span class="menu-text">Settings</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="Search products, orders, customers..."
+          />
+        </div>
+
+        <div class="header-actions">
+          <div class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </div>
+          <div class="notification">
+            <i class="fas fa-envelope"></i>
+            <span class="notification-badge">5</span>
+          </div>
+          <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-name">Admin User</div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="content">
+        <h1 class="page-title">Dashboard</h1>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Total Revenue</div>
+                <div class="card-value">$24,780</div>
+                <div class="card-change change-up">
+                  <i class="fas fa-arrow-up"></i> 12.5% from last month
+                </div>
+              </div>
+              <div class="card-icon revenue">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">New Orders</div>
+                <div class="card-value">1,248</div>
+                <div class="card-change change-up">
+                  <i class="fas fa-arrow-up"></i> 8.2% from last month
+                </div>
+              </div>
+              <div class="card-icon orders">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Customers</div>
+                <div class="card-value">8,542</div>
+                <div class="card-change change-up">
+                  <i class="fas fa-arrow-up"></i> 5.7% from last month
+                </div>
+              </div>
+              <div class="card-icon customers">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Conversion Rate</div>
+                <div class="card-value">3.2%</div>
+                <div class="card-change change-down">
+                  <i class="fas fa-arrow-down"></i> 0.5% from last month
+                </div>
+              </div>
+              <div class="card-icon conversion">
+                <i class="fas fa-percentage"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts">
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">Sales Analytics</div>
+              <div class="chart-period">
+                <button class="period-btn">Day</button>
+                <button class="period-btn active">Week</button>
+                <button class="period-btn">Month</button>
+                <button class="period-btn">Year</button>
+              </div>
+            </div>
+            <div class="chart-placeholder">[Sales Chart Will Appear Here]</div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-header">
+              <div class="chart-title">Revenue Sources</div>
+            </div>
+            <div class="chart-placeholder">
+              [Revenue Pie Chart Will Appear Here]
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="recent-orders">
+          <div class="table-header">
+            <div class="section-title">Recent Orders</div>
+            <a href="#" class="view-all">View All</a>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#EC-1001</td>
+                <td>John Smith</td>
+                <td>2023-06-15</td>
+                <td>$128.50</td>
+                <td>
+                  <span class="status status-processing">Processing</span>
+                </td>
+                <td>
+                  <button class="action-btn process">Process</button>
+                  <button class="action-btn view">View</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#EC-1000</td>
+                <td>Sarah Johnson</td>
+                <td>2023-06-14</td>
+                <td>$245.99</td>
+                <td><span class="status status-completed">Completed</span></td>
+                <td>
+                  <button class="action-btn view">View</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#EC-999</td>
+                <td>Michael Brown</td>
+                <td>2023-06-14</td>
+                <td>$78.30</td>
+                <td><span class="status status-completed">Completed</span></td>
+                <td>
+                  <button class="action-btn view">View</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#EC-998</td>
+                <td>Emily Davis</td>
+                <td>2023-06-13</td>
+                <td>$312.75</td>
+                <td>
+                  <span class="status status-processing">Processing</span>
+                </td>
+                <td>
+                  <button class="action-btn process">Process</button>
+                  <button class="action-btn view">View</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#EC-997</td>
+                <td>Robert Wilson</td>
+                <td>2023-06-12</td>
+                <td>$56.20</td>
+                <td><span class="status status-cancelled">Cancelled</span></td>
+                <td>
+                  <button class="action-btn view">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Inventory & Quick Actions -->
+        <div class="bottom-section">
+          <div class="inventory-alerts">
+            <div class="table-header">
+              <div class="section-title">Inventory Alerts</div>
+              <a href="#" class="view-all">View All</a>
+            </div>
+
+            <div class="alert-item">
+              <div class="alert-product">
+                <div class="product-image">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div>
+                  <div>Wireless Headphones</div>
+                  <div class="stock-warning">Only 3 left in stock</div>
+                </div>
+              </div>
+              <button class="action-btn process">Restock</button>
+            </div>
+
+            <div class="alert-item">
+              <div class="alert-product">
+                <div class="product-image">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div>
+                  <div>Smart Watch Pro</div>
+                  <div class="stock-warning">Only 5 left in stock</div>
+                </div>
+              </div>
+              <button class="action-btn process">Restock</button>
+            </div>
+
+            <div class="alert-item">
+              <div class="alert-product">
+                <div class="product-image">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div>
+                  <div>Bluetooth Speaker</div>
+                  <div class="stock-warning">Only 2 left in stock</div>
+                </div>
+              </div>
+              <button class="action-btn process">Restock</button>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+            <div class="section-title">Quick Actions</div>
+            <div class="action-buttons">
+              <a
+                href="{% url 'products:products_create' %}"
+                class="action-button"
+              >
+                <i class="fas fa-plus-circle action-icon"></i>
+                <span class="action-text">Add New Product</span>
+              </a>
+              <a href="#" class="action-button">
+                <i class="fas fa-truck action-icon"></i>
+                <span class="action-text">Process Orders</span>
+              </a>
+              <a href="#" class="action-button">
+                <i class="fas fa-tag action-icon"></i>
+                <span class="action-text">Create Discount</span>
+              </a>
+              <a href="#" class="action-button">
+                <i class="fas fa-file-export action-icon"></i>
+                <span class="action-text">Generate Report</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Mobile menu toggle
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+        const sidebar = document.querySelector(".sidebar");
+        const toggleBtn = document.querySelector(".toggle-btn");
+
+        // Toggle sidebar on mobile menu button click
+        mobileMenuBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          sidebar.classList.toggle("active");
+        });
+
+        // Close sidebar on toggle button click
+        toggleBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          sidebar.classList.remove("active");
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener("click", function (e) {
+          if (!sidebar.contains(e.target) && e.target !== mobileMenuBtn) {
+            sidebar.classList.remove("active");
+          }
+        });
+
+        // Toggle submenus
+        const menuItemsWithSubmenu = document.querySelectorAll(".menu-item");
+        menuItemsWithSubmenu.forEach((item) => {
+          const chevron = item.querySelector(".fa-chevron-down");
+          if (chevron) {
+            item.addEventListener("click", function (e) {
+              // Don't toggle if clicking on a link
+              if (e.target.tagName === "A") return;
+
+              e.stopPropagation();
+
+              // Find the next sibling submenu
+              const submenu = this.nextElementSibling;
+              if (submenu && submenu.classList.contains("submenu")) {
+                submenu.classList.toggle("show");
+                chevron.classList.toggle("fa-chevron-down");
+                chevron.classList.toggle("fa-chevron-up");
+              }
+            });
+          }
+        });
+
+        // Period buttons in charts
+        const periodButtons = document.querySelectorAll(".period-btn");
+        periodButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            periodButtons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

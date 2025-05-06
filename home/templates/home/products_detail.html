@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ product.product_name }} - Product Details</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}" />
+    <script src="{% static 'home/js/cart.js' %}"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <a href="{% url 'home:home' %}">
+          <img
+            src="{% static 'home/images/paladin-6539115_640.png' %}"
+            alt="Hagerbet Logo"
+          />
+        </a>
+      </div>
+
+      <div class="search-bar">
+        <select class="category-dropdown">
+          <option>All</option>
+          {% if categories %} {% for cata in categories %}
+          <option value="{{ cata.name }}">{{ cata.name }}</option>
+          {% endfor %} {% endif %}
+        </select>
+        <input type="text" placeholder="Search Hagerbet" />
+        <button class="search-button">Search</button>
+      </div>
+
+      <div class="nav-icons" id="nav-icons">
+        <div class="nav-icon location">
+          <i class="fas fa-map-marker-alt"></i>
+          <select name="Location" id="location-dropdown">
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Canada">Canada</option>
+            <option value="Germany">Germany</option>
+            <option value="Ethiopia">Ethiopia</option>
+          </select>
+        </div>
+
+        <div class="nav-icon language">
+          <i class="fas fa-globe"></i>
+          <select name="Language" id="language-dropdown">
+            <option>English</option>
+            <option>Spanish</option>
+            <option>French</option>
+            <option>German</option>
+          </select>
+        </div>
+
+        <div class="nav-icon account">
+          <i class="fas fa-user"></i>
+          <div class="dropdown-content">
+            <a href="#">Login</a>
+            <a href="{% url 'users:user_create' %}">Register</a>
+          </div>
+        </div>
+
+        <div class="nav-icon cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
+          <div class="cart-dropdown" id="cart-dropdown">
+            <div class="cart-header">
+              <h4>Your Cart</h4>
+              <button id="close-cart">×</button>
+            </div>
+            <div class="cart-items" id="cart-items">
+              <p class="empty-cart-message">Your cart is empty</p>
+            </div>
+            <div class="cart-total">
+              <span>Total: $<span id="cart-total">0.00</span></span>
+              <button class="checkout-btn">Proceed to Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="product-detail-card">
+        <div class="product-image-container">
+          <img
+            src="{{ product.image.url }}"
+            alt="{{ product.product_name }}"
+            class="product-image"
+            onerror="this.src='{% static 'home/images/placeholder.png' %}'"
+          />
+        </div>
+
+        <div class="product-info">
+          <h1 class="product-title">{{ product.product_name }}</h1>
+          <div class="product-price">${{ product.price }}</div>
+
+          <div class="product-description">
+            <span class="description-title">Product Description</span>
+            <div class="description-content">
+              {{ product.description|linebreaks }}
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button
+              class="btn btn-primary add-to-cart"
+              data-id="{{ product.id }}"
+              data-name="{{ product.product_name }}"
+              data-price="{{ product.price|floatformat:2 }}"
+              data-image="{{ product.image.url }}"
+            >
+              Add to Cart
+            </button>
+            <a href="{% url 'home:home' %}" class="btn btn-secondary"
+              >Back to Home</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="info">
+        <a href="#">Contact us</a>
+        <a href="#">Sign in</a>
+        <a href="#">About</a>
+      </div>
+      <div class="social-media">
+        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <div class="coop">
+        <p>Hagerbet PLC 2025 ©</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile menu toggle
+        const mobileMenu = document.getElementById("mobile-menu");
+        const navIcons = document.getElementById("nav-icons");
+        if (mobileMenu && navIcons) {
+          mobileMenu.addEventListener("click", function () {
+            navIcons.classList.toggle("active");
+          });
+        }
+
+        // Search button placeholder
+        document
+          .querySelector(".search-button")
+          ?.addEventListener("click", function (e) {
+            e.preventDefault();
+            const query = document.querySelector(".search-bar input").value;
+            const notification = document.createElement("div");
+            notification.className = "cart-notification";
+            notification.textContent = `Search for: ${query} (Coming soon)`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+              notification.classList.add("fade-out");
+              setTimeout(() => notification.remove(), 300);
+            }, 2000);
+          });
+      });
+    </script>
+  </body>
+</html>

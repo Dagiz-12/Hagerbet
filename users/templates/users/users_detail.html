@@ -1,0 +1,7 @@
+<h1>User {{ users.fname }}</h1>
+<p>{{ users.lname }}</p>
+<p>{{ users.email }}</p>
+<p>{{ users.password }}</p>
+<p>
+  <a href="{% url 'users:main' %}">Go back to list</a>
+</p>
