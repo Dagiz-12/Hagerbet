@@ -29,12 +29,15 @@ body {
   z-index: 1000;
   flex-wrap: wrap;
   gap: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   
+  
 }
 
 .logo img {
-  width: 80px;
+  width: 60px;
   height: auto;
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .search-bar {
@@ -313,108 +316,236 @@ body {
   flex: 1;
   margin-top: 80px;
   padding: 2rem;
+  
 }
 
-/* Products Section */
-.products-section {
-  width: 100%;
-  padding: 2rem;
-}
+/* Add these styles to your existing style.css */
 
+/* Futuristic Product Cards */
+/* Updated Futuristic Product Cards with Gold Accents */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .product-card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-10px);
+  box-shadow: 0 12px 40px rgba(255, 193, 7, 0.25);
+  border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
 .product-image-container {
-  padding: 1.5rem;
-  background-color: #f9f9f9;
-  text-align: center;
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image {
-  max-height: 200px;
+  max-height: 100%;
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
 .product-info {
-  padding: 1.5rem;
+  padding: 20px;
+  color: #fff;
+  position: relative;
+}
+
+.product-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #FFD700, transparent);
 }
 
 .product-card h3 {
   font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: 600;
 }
 
 .product-card p {
-  color: #555;
-  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
+  margin-bottom: 15px;
+  line-height: 1.5;
 }
 
 .price {
-  font-weight: bold;
-  color: #b12704;
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FFD700; /* Gold color */
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+}
+
+.price::before {
+  content: '$';
+  font-size: 1rem;
+  margin-right: 4px;
+  color: rgba(255, 215, 0, 0.7);
 }
 
 .product-buttons {
   display: flex;
   gap: 10px;
-  margin-top: 1rem;
-}
-
-.product-buttons button,
-.product-buttons a {
-  flex: 1;
-  text-align: center;
-  padding: 0.5rem;
-  border-radius: 4px;
-  font-weight: 500;
-  text-decoration: none;
+  margin-top: 20px;
 }
 
 .add-to-cart {
-  background-color: #febd69;
+  flex: 1;
+  background: linear-gradient(90deg, #FFC107 0%, #FFA000 100%); /* Gold gradient */
   border: none;
-  color: #111;
+  color: #1a1a2e; /* Dark text for contrast */
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .add-to-cart:hover {
-  background-color: #f7ca00;
+  background: linear-gradient(90deg, #FFD700 0%, #FFC107 100%);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+  color: #000;
+}
+
+.add-to-cart::before {
+  content: '+';
+  font-weight: bold;
 }
 
 .view-details-btn {
-  background: #f0f2f2;
-  color: #111;
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255, 215, 0, 0.5); /* Gold border */
+  color: #FFD700;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
 }
 
 .view-details-btn:hover {
-  background: #e0e2e2;
+  background: rgba(255, 215, 0, 0.1);
+  border-color: #FFD700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
 }
+
+/* Updated corner accents with gold */
+.product-card::before,
+.product-card::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #FFD700; /* Gold */
+  transition: all 0.3s ease;
+}
+
+.product-card::before {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.product-card::after {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
+}
+
+.product-card:hover::before,
+.product-card:hover::after {
+  width: 40px;
+  height: 40px;
+  border-color: #FFC107; /* Slightly darker gold */
+}
+
+/* Updated glow effect */
+.product-card:hover {
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+/* Responsive adjustments remain the same */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .product-image-container {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-buttons {
+    flex-direction: column;
+  }
+}
+/* Section 1 - Categories */
 
 /* Section 1 - Categories */
 .section-1 {
   background-color: #131921;
   padding: 10px 20px;
+  margin-top: 60px; /* Space below fixed navbar */
+  
+  
 }
 
 .options {
@@ -436,20 +567,26 @@ body {
 }
 
 /* Sidebar */
+/* Sidebar */
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 60px; /* Changed from 0 to start below navbar */
   left: -300px;
   width: 300px;
-  height: 100%;
+  height: calc(100vh - 60px); /* Full height minus navbar */
   background-color: #232f3e;
   color: white;
   z-index: 1002;
   transition: left 0.3s ease;
-  padding-top: 60px;
+  overflow-y: auto; /* Add scroll if content is long */
+  padding-top: 0; /* Removed the padding-top since we're positioning below navbar */
 }
 
 .sidebar-header {
+  position: sticky;
+  top: 0;
+  background-color: #232f3e;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -768,4 +905,118 @@ body {
     background-color: #f8f9fa;
     border-color: #ccc;
     transform: translateY(-2px);
+  }
+
+  /* Add these styles to your existing style.css */
+
+/* Section 1 - Categories */
+.section-1 {
+    background-color: #131921;
+    padding: 10px 20px;
+    margin-top: 60px; /* Add space below fixed navbar */
+  }
+  
+  .options {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .options a, 
+  .options button {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .categories {
+    position: relative;
+  }
+  
+  #open-sidebar {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+  }
+  
+  #open-sidebar:hover {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100%;
+    background-color: #232f3e;
+    color: white;
+    z-index: 1002;
+    transition: left 0.3s ease;
+    padding-top: 60px;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .sidebar ul {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar ul li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .sidebar ul li:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+  
+  /* Section 4 - Footer Links */
+  .section-4 {
+    background-color: #232f3e;
+    padding: 20px 0;
+    margin-top: 30px;
+  }
+  
+  .something {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .something a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+  
+  .something a:hover {
+    text-decoration: underline;
+    background: rgba(255,255,255,0.1);
   }

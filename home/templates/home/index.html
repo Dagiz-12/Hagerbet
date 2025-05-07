@@ -108,13 +108,15 @@
               {% endif %}
             </ul>
           </div>
-          <button id="open-sidebar">All</button>
+          <button id="open-sidebar">
+            <i class="fas fa-bars"></i> All Categories
+          </button>
         </div>
         <div class="deals">
-          <a href="#">Hot Deals</a>
+          <a href="#"><i class="fas fa-bolt"></i> Hot Deals</a>
         </div>
         <div class="customers">
-          <a href="#">Customer Services</a>
+          <a href="#"><i class="fas fa-headset"></i> Customer Service</a>
         </div>
       </div>
     </section>
@@ -123,13 +125,13 @@
     <div class="slider">
       <div class="slides">
         <div class="slide">
-          <img src="{% static 'home/images/4.jpg' %}" alt="Slide 1" />
+          <img src="{% static 'home/images/19.jpg' %}" alt="Slide 1" />
         </div>
         <div class="slide">
-          <img src="{% static 'home/images/5.jpg' %}" alt="Slide 2" />
+          <img src="{% static 'home/images/20.jpg' %}" alt="Slide 2" />
         </div>
         <div class="slide">
-          <img src="{% static 'home/images/6.jpg' %}" alt="Slide 3" />
+          <img src="{% static 'home/images/21.jpg' %}" alt="Slide 3" />
         </div>
       </div>
       <button class="slider-arrow prev-arrow">&lt;</button>
@@ -153,7 +155,7 @@
             <div class="product-info">
               <h3>{{ pro.product_name }}</h3>
               <p>{{ pro.description|truncatechars:100 }}</p>
-              <p class="price">${{ pro.price }}</p>
+              <p class="price">{{ pro.price }}</p>
               <div class="product-buttons">
                 <button
                   class="add-to-cart"
@@ -168,25 +170,25 @@
                   href="{% url 'home:product_detail' pro.slug %}"
                   class="view-details-btn"
                 >
-                  View Details
+                  Details
                 </a>
               </div>
             </div>
           </div>
           {% endfor %} {% else %}
-          <p>There are no products available.</p>
+          <p class="no-products">There are no products available.</p>
           {% endif %}
         </div>
       </section>
     </main>
 
-    <!-- Footer Links -->
+    <!-- Section 4 - Footer Links -->
     <section class="section-4">
       <div class="something">
-        <a href="#">Trade Assurances</a>
-        <a href="#">Get Support</a>
-        <a href="#">Sell on Hagerbet</a>
-        <a href="#">Get to Know us</a>
+        <a href="#"><i class="fas fa-shield-alt"></i> Trade Assurances</a>
+        <a href="#"><i class="fas fa-question-circle"></i> Get Support</a>
+        <a href="#"><i class="fas fa-store"></i> Sell on Hagerbet</a>
+        <a href="#"><i class="fas fa-info-circle"></i> Get to Know us</a>
       </div>
     </section>
 
@@ -209,34 +211,8 @@
     </footer>
 
     <script>
+      // Slider functionality
       document.addEventListener("DOMContentLoaded", function () {
-        // Mobile menu toggle
-        const mobileMenu = document.getElementById("mobile-menu");
-        const navIcons = document.getElementById("nav-icons");
-        if (mobileMenu && navIcons) {
-          mobileMenu.addEventListener("click", function () {
-            navIcons.classList.toggle("active");
-          });
-        }
-
-        // Sidebar toggle
-        const openSidebar = document.getElementById("open-sidebar");
-        const closeSidebar = document.getElementById("close-sidebar");
-        const sidebar = document.getElementById("sidebar");
-
-        if (openSidebar && sidebar) {
-          openSidebar.addEventListener("click", function () {
-            sidebar.style.left = "0";
-          });
-        }
-
-        if (closeSidebar && sidebar) {
-          closeSidebar.addEventListener("click", function () {
-            sidebar.style.left = "-300px";
-          });
-        }
-
-        // Slider functionality
         let currentSlide = 0;
         const slides = document.querySelector(".slides");
         const slideElements = document.querySelectorAll(".slide");
@@ -293,6 +269,15 @@
             );
             slider.addEventListener("mouseleave", startAutoSlide);
           }
+        }
+
+        // Mobile menu toggle
+        const mobileMenu = document.getElementById("mobile-menu");
+        const navIcons = document.getElementById("nav-icons");
+        if (mobileMenu && navIcons) {
+          mobileMenu.addEventListener("click", function () {
+            navIcons.classList.toggle("active");
+          });
         }
 
         // Search button placeholder
