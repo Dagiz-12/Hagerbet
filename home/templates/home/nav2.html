@@ -34,37 +34,64 @@
         <input type="text" placeholder="Search Hagerbet" />
         <button class="search-button">Search</button>
       </div>
-
-      <div class="nav-icons" id="nav-icons">
-        <div class="nav-icon location" id="location-container">
-          <i class="fas fa-map-marker-alt"></i>
-          <select
-            name="Location"
-            id="location-dropdown"
-            class="enhanced-dropdown"
-          >
-            <option value="US" data-currency="USD">United States</option>
-            <option value="GB" data-currency="GBP">United Kingdom</option>
-            <option value="CA" data-currency="CAD">Canada</option>
-            <option value="DE" data-currency="EUR">Germany</option>
-            <option value="ET" data-currency="ETB">Ethiopia</option>
-          </select>
-          <span class="selected-currency">USD</span>
+<!-- In your nav.html file, update the nav-icons section to this: -->
+<div class="nav-icons">
+    <div class="nav-icon language-selector">
+      <i class="fas fa-globe"></i>
+      <span class="icon-label">Language</span>
+      <select id="language-select">
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="am">AM</option>
+      </select>
+      <div class="dropdown-content">
+        <a href="#" data-lang="en">English</a>
+        <a href="#" data-lang="fr">French</a>
+        <a href="#" data-lang="am">Amharic</a>
+      </div>
+    </div>
+    
+    <div class="nav-icon location-selector">
+      <i class="fas fa-map-marker-alt"></i>
+      <span class="icon-label">Location</span>
+      <select id="location-select">
+        <option value="us">US</option>
+        <option value="fr">FR</option>
+        <option value="et">ET</option>
+      </select>
+      <div class="dropdown-content">
+        <a href="#" data-loc="us">United States</a>
+        <a href="#" data-loc="fr">France</a>
+        <a href="#" data-loc="et">Ethiopia</a>
+      </div>
+    </div>
+    
+    <div class="nav-icon account">
+      <i class="fas fa-user"></i>
+      <span class="icon-label">Account</span>
+      <div class="dropdown-content">
+        <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+      </div>
+    </div>
+    
+    <div class="nav-icon cart">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count">0</span>
+      <span class="icon-label">Cart</span>
+      <div class="dropdown-content cart-dropdown">
+        <div class="cart-header">
+          <h4>Your Cart</h4>
+          <button id="close-cart">×</button>
         </div>
-
-        <div class="nav-icon language">
-          <i class="fas fa-globe"></i>
-          <select
-            name="Language"
-            id="language-dropdown"
-            class="enhanced-dropdown"
-          >
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-          </select>
+        <div class="cart-items">
+          <p class="empty-cart-message">Your cart is empty</p>
         </div>
+      </div>
+    </div>
+  </div>
 
         <!-- In your navbar, replace the account section with this: -->
         <div class="nav-icon account">
@@ -120,6 +147,32 @@
     <script src="{% static 'home/js/cart.js' %}"></script>
     <script src="{% static 'home/js/search.js' %}"></script>
     <script src="{% static 'home/js/currency.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
+    <script>
+      document.querySelectorAll(".nav-icon").forEach((icon) => {
+        icon.addEventListener("click", (e) => {
+          // Close all other dropdowns first
+          document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
+            if (otherIcon !== icon) {
+              otherIcon.classList.remove("show-dropdown");
+            }
+          });
+
+          // Toggle current dropdown
+          icon.classList.toggle("show-dropdown");
+        });
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".nav-icon")) {
+          document.querySelectorAll(".nav-icon").forEach((icon) => {
+            icon.classList.remove("show-dropdown");
+          });
+        }
+      });
+    </script>
+
+    {% endblock %}
   </body>
 </html>

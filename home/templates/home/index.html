@@ -218,4 +218,82 @@
   });
 </script>
 
+<script>
+  document.querySelectorAll(".nav-icon").forEach((icon) => {
+    icon.addEventListener("click", (e) => {
+      // Close all other dropdowns first
+      document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
+        if (otherIcon !== icon) {
+          otherIcon.classList.remove("show-dropdown");
+        }
+      });
+
+      // Toggle current dropdown
+      icon.classList.toggle("show-dropdown");
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".nav-icon")) {
+      document.querySelectorAll(".nav-icon").forEach((icon) => {
+        icon.classList.remove("show-dropdown");
+      });
+    }
+  });
+</script>
+<script>
+  // Sidebar functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const openSidebar = document.getElementById("open-sidebar");
+    const closeSidebar = document.getElementById("close-sidebar");
+    const sidebar = document.getElementById("sidebar");
+
+    if (openSidebar && sidebar) {
+      openSidebar.addEventListener("click", function (e) {
+        e.preventDefault();
+        sidebar.classList.add("active");
+      });
+    }
+
+    if (closeSidebar && sidebar) {
+      closeSidebar.addEventListener("click", function (e) {
+        e.preventDefault();
+        sidebar.classList.remove("active");
+      });
+    }
+
+    // Close sidebar when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest("#sidebar") && !e.target.closest("#open-sidebar")) {
+        if (sidebar) sidebar.classList.remove("active");
+      }
+    });
+
+    // Dropdown functionality for nav icons
+    document.querySelectorAll(".nav-icon").forEach((icon) => {
+      icon.addEventListener("click", (e) => {
+        // Close all other dropdowns first
+        document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
+          if (otherIcon !== icon) {
+            otherIcon.classList.remove("show-dropdown");
+          }
+        });
+
+        // Toggle current dropdown
+        icon.classList.toggle("show-dropdown");
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".nav-icon")) {
+        document.querySelectorAll(".nav-icon").forEach((icon) => {
+          icon.classList.remove("show-dropdown");
+        });
+      }
+    });
+  });
+</script>
+
 {% endblock %}

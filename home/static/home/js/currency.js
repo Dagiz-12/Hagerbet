@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 async function initCurrencyConverter() {
     const locationDropdown = document.getElementById('location-dropdown');
-    const currencyDisplay = document.querySelector('.selected-currency');
+    const currencyDisplay = document.querySelector('.location-selector .icon-label');
     let exchangeRates = {};
     let baseCurrency = 'USD';
 
@@ -64,14 +64,42 @@ async function initCurrencyConverter() {
 
     // Initialize
     await fetchExchangeRates();
-    const savedCurrency = localStorage.getItem('preferredCurrency') || 
-                         locationDropdown.options[locationDropdown.selectedIndex].dataset.currency;
+    const savedCurrency = localStorage.getItem('preferredCurrency') || 'USD';
+    
+    // Set the dropdown to saved currency
+    if (locationDropdown) {
+        const option = Array.from(locationDropdown.options).find(opt => opt.dataset.currency === savedCurrency);
+        if (option) option.selected = true;
+    }
+    
     convertPrices(savedCurrency);
 
-    // Handle changes
-    locationDropdown.addEventListener('change', function() {
-        const currency = this.options[this.selectedIndex].dataset.currency;
-        localStorage.setItem('preferredCurrency', currency);
-        convertPrices(currency);
+    // Handle changes from dropdown
+    if (locationDropdown) {
+        locationDropdown.addEventListener('change', function() {
+            const currency = this.options[this.selectedIndex].dataset.currency;
+            localStorage.setItem('preferredCurrency', currency);
+            convertPrices(currency);
+        });
+    }
+
+    // Handle changes from dropdown content clicks
+    document.querySelectorAll('.location-selector .dropdown-content a').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currency = this.dataset.currency;
+            localStorage.setItem('preferredCurrency', currency);
+            
+            // Update dropdown selection
+            if (locationDropdown) {
+                const option = Array.from(locationDropdown.options).find(opt => opt.dataset.currency === currency);
+                if (option) option.selected = true;
+            }
+            
+            convertPrices(currency);
+            
+            // Close dropdown
+            document.querySelector('.location-selector').classList.remove('show-dropdown');
+        });
     });
 }
