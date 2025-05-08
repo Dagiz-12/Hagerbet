@@ -219,9 +219,14 @@
               alt="{{ item.name }}"
               class="cart-item-image"
             />
-            <div class="cart-item-details">
+            <div class="cart-item">
               <h3 class="cart-item-name">{{ item.name }}</h3>
-              <p class="cart-item-price">${{ item.price }}</p>
+              <div
+                class="cart-item-price"
+                data-price-original="{{ item.price }}"
+              >
+                ${{ item.price }}
+              </div>
               <div class="quantity-controls">
                 <button class="quantity-btn minus">-</button>
                 <span class="quantity">{{ item.quantity }}</span>
