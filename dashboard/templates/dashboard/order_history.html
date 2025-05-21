@@ -1,0 +1,98 @@
+{%load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/other.css' %}">
+</head>
+<body>
+  
+{% block content %}
+<div class="content">
+    <h1 class="page-title">Order History</h1>
+    <div class="page-actions">
+    <a href="{% url 'dashboard:dashboard' %}" class="action-btn back">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+    
+    <div class="search-filter">
+        <form method="get">
+            <input type="text" name="search" placeholder="Search orders..." value="{{ request.GET.search }}">
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="Pending" {% if request.GET.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Processing" {% if request.GET.status == 'Processing' %}selected{% endif %}>Processing</option>
+                <option value="Shipped" {% if request.GET.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                <option value="Delivered" {% if request.GET.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                <option value="Cancelled" {% if request.GET.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+    
+    <div class="recent-orders">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.shipping_first_name }} {{ order.shipping_last_name }}</td>
+                    <td>{{ order.order_date|date:"Y-m-d" }}</td>
+                    <td>${{ order.total_price }}</td>
+                    <td>
+                        <span class="status status-{{ order.status|lower }}">{{ order.status }}</span>
+                    </td>
+                    <td>
+                        {% if order.payment_complete %}
+                        <span class="status status-completed">Paid</span>
+                        {% else %}
+                        <span class="status status-pending">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- In the table row, update the customer cell -->
+<td>
+    <a href="{% url 'users:detail' order.user.id %}" class="customer-link">
+        {{ order.shipping_first_name }} {{ order.shipping_last_name }}
+    </a>
+</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Previous</a>
+            {% endif %}
+            
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,497 @@
+/* ==================== */
+/* ORDER MANAGEMENT STYLES */
+/* ==================== */
+
+/* Content Container */
+.content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 60px);
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Search and Filter */
+.search-filter {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-filter input[type="text"] {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.search-filter input[type="text"]:focus {
+    border-color: #4e73df;
+    outline: none;
+}
+
+.search-filter select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.search-filter button {
+    padding: 10px 20px;
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-filter button:hover {
+    background-color: #3a5bc7;
+}
+
+/* Tables */
+.recent-orders {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.view-all {
+    color: #4e73df;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.view-all:hover {
+    color: #3a5bc7;
+    text-decoration: underline;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Status Badges */
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-processing {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-shipped {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Action Buttons */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin-right: 5px;
+    gap: 5px;
+}
+
+.action-btn i {
+    font-size: 12px;
+}
+
+.action-btn.process {
+    background-color: #4e73df;
+    color: white;
+}
+
+.action-btn.process:hover {
+    background-color: #3a5bc7;
+}
+
+.action-btn.view {
+    background-color: #6c757d;
+    color: white;
+}
+
+.action-btn.view:hover {
+    background-color: #5a6268;
+}
+
+.action-btn.download {
+    background-color: #1cc88a;
+    color: white;
+}
+
+.action-btn.download:hover {
+    background-color: #17a673;
+}
+
+.action-btn.back {
+    background-color: #6c757d;
+    color: white;
+}
+
+.action-btn.back:hover {
+    background-color: #5a6268;
+}
+
+.action-btn.ship {
+    background-color: #f6c23e;
+    color: #000;
+}
+
+.action-btn.ship:hover {
+    background-color: #e4b12e;
+}
+
+.action-btn.deliver {
+    background-color: #1cc88a;
+    color: white;
+}
+
+.action-btn.deliver:hover {
+    background-color: #17a673;
+}
+
+.action-btn.edit {
+    background-color: #36b9cc;
+    color: white;
+}
+
+.action-btn.edit:hover {
+    background-color: #2c9faf;
+}
+
+.action-btn.save {
+    background-color: #1cc88a;
+    color: white;
+}
+
+.action-btn.save:hover {
+    background-color: #17a673;
+}
+
+.action-btn.cancel {
+    background-color: #e74a3b;
+    color: white;
+}
+
+.action-btn.cancel:hover {
+    background-color: #d62c1a;
+}
+
+/* Order Detail Styles */
+.order-actions-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.order-details-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 20px;
+}
+
+.order-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.order-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.order-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-weight: 600;
+    width: 180px;
+    color: #495057;
+}
+
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.order-items-table th, 
+.order-items-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.order-items-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.total-row {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* Order Update Form */
+.order-update-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 15px 0;
+}
+
+.pagination a {
+    padding: 8px 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #e9ecef;
+}
+
+.pagination span {
+    padding: 8px 15px;
+    color: #495057;
+}
+
+/* Customer Links */
+.customer-link {
+    color: #4e73df;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.customer-link:hover {
+    color: #3a5bc7;
+    text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .search-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .order-actions-top, .order-actions, .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Page Actions */
+.page-actions {
+    margin-bottom: 20px;
+}
+
+/* Back Button */
+.action-btn.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.action-btn.back:hover {
+    background-color: #5a6268;
+}
+
+.action-btn.back i {
+    font-size: 12px;
+}
+
+/* Order Items Table Fixes */
+.order-items-table td {
+    vertical-align: top;
+}
+
+.order-items-table .product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-items-table .product-image {
+    width: 50px;
+    height: 50px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-items-table .product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 4px;
+}

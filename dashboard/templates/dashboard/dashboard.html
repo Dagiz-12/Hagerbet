@@ -10,6 +10,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
   </head>
   <body>
     <!-- Mobile Menu Button (visible only on small screens) -->
@@ -54,14 +55,14 @@
         </div>
 
         <a href="#" class="menu-item">
-          <i class="fas fa-shopping-cart menu-icon"></i>
-          <span class="menu-text">Orders</span>
-          <i class="fas fa-chevron-down menu-icon ml-auto"></i>
-        </a>
-        <div class="submenu">
-          <a href="#" class="submenu-item">New Orders</a>
-          <a href="#" class="submenu-item">Order History</a>
-        </div>
+    <i class="fas fa-shopping-cart menu-icon"></i>
+    <span class="menu-text">Orders</span>
+    <i class="fas fa-chevron-down menu-icon ml-auto"></i>
+</a>
+<div class="submenu">
+    <a href="{% url 'dashboard:order_history' %}?status=pending" class="submenu-item">Pending Orders</a>
+    <a href="{% url 'dashboard:order_history' %}" class="submenu-item">Order History</a>
+</div>
 
         <a href="{% url 'users:main' %}" class="menu-item">
           <i class="fas fa-users menu-icon"></i>
@@ -112,9 +113,9 @@
 
         <div class="header-actions">
           <div class="notification">
-            <i class="fas fa-bell"></i>
-            <span class="notification-badge">3</span>
-          </div>
+    <i class="fas fa-shopping-cart"></i>
+    <span class="notification-badge">{{ pending_order_count }}</span>
+</div>
           <div class="notification">
             <i class="fas fa-envelope"></i>
             <span class="notification-badge">5</span>
@@ -132,67 +133,68 @@
         <h1 class="page-title">Dashboard</h1>
 
         <!-- Summary Cards -->
-        <div class="summary-cards">
-          <div class="card">
-            <div class="card-header">
-              <div>
+        <!-- Summary Cards -->
+<div class="summary-cards">
+    <div class="card">
+        <div class="card-header">
+            <div>
                 <div class="card-title">Total Revenue</div>
-                <div class="card-value">$24,780</div>
+                <div class="card-value">${{ total_revenue|default:"0" }}</div>
                 <div class="card-change change-up">
-                  <i class="fas fa-arrow-up"></i> 12.5% from last month
+                    <i class="fas fa-arrow-up"></i> 12.5% from last month
                 </div>
-              </div>
-              <div class="card-icon revenue">
+            </div>
+            <div class="card-icon revenue">
                 <i class="fas fa-dollar-sign"></i>
-              </div>
             </div>
-          </div>
+        </div>
+    </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
+    <div class="card">
+        <div class="card-header">
+            <div>
                 <div class="card-title">New Orders</div>
-                <div class="card-value">1,248</div>
+                <div class="card-value">{{ recent_orders_count|default:"0" }}</div>
                 <div class="card-change change-up">
-                  <i class="fas fa-arrow-up"></i> 8.2% from last month
+                    <i class="fas fa-arrow-up"></i> 8.2% from last month
                 </div>
-              </div>
-              <div class="card-icon orders">
+            </div>
+            <div class="card-icon orders">
                 <i class="fas fa-shopping-cart"></i>
-              </div>
             </div>
-          </div>
+        </div>
+    </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">Customers</div>
-                <div class="card-value">8,542</div>
-                <div class="card-change change-up">
-                  <i class="fas fa-arrow-up"></i> 5.7% from last month
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Pending Orders</div>
+                <div class="card-value">{{ pending_order_count|default:"0" }}</div>
+                <div class="card-change change-down">
+                    <i class="fas fa-arrow-down"></i> 2.1% from last month
                 </div>
-              </div>
-              <div class="card-icon customers">
-                <i class="fas fa-users"></i>
-              </div>
             </div>
-          </div>
+            <div class="card-icon customers">
+                <i class="fas fa-clock"></i>
+            </div>
+        </div>
+    </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
+    <div class="card">
+        <div class="card-header">
+            <div>
                 <div class="card-title">Conversion Rate</div>
                 <div class="card-value">3.2%</div>
                 <div class="card-change change-down">
-                  <i class="fas fa-arrow-down"></i> 0.5% from last month
+                    <i class="fas fa-arrow-down"></i> 0.5% from last month
                 </div>
-              </div>
-              <div class="card-icon conversion">
-                <i class="fas fa-percentage"></i>
-              </div>
             </div>
-          </div>
+            <div class="card-icon conversion">
+                <i class="fas fa-percentage"></i>
+            </div>
         </div>
+    </div>
+</div>
 
         <!-- Charts Section -->
         <div class="charts">
@@ -220,83 +222,49 @@
         </div>
 
         <!-- Recent Orders -->
-        <div class="recent-orders">
-          <div class="table-header">
-            <div class="section-title">Recent Orders</div>
-            <a href="#" class="view-all">View All</a>
-          </div>
+    <!-- Recent Orders -->
+<div class="recent-orders">
+    <div class="table-header">
+        <div class="section-title">Recent Orders</div>
+        <a href="{% url 'dashboard:order_history' %}" class="view-all">View All</a>
+    </div>
 
-          <table>
-            <thead>
-              <tr>
+    <table>
+        <thead>
+            <tr>
                 <th>Order ID</th>
                 <th>Customer</th>
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Status</th>
                 <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>#EC-1001</td>
-                <td>John Smith</td>
-                <td>2023-06-15</td>
-                <td>$128.50</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.shipping_first_name }} {{ order.shipping_last_name }}</td>
+                <td>{{ order.order_date|date:"Y-m-d" }}</td>
+                <td>${{ order.total_price }}</td>
                 <td>
-                  <span class="status status-processing">Processing</span>
+                    <span class="status status-{{ order.status|lower }}">{{ order.status }}</span>
                 </td>
                 <td>
-                  <button class="action-btn process">Process</button>
-                  <button class="action-btn view">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#EC-1000</td>
-                <td>Sarah Johnson</td>
-                <td>2023-06-14</td>
-                <td>$245.99</td>
-                <td><span class="status status-completed">Completed</span></td>
-                <td>
-                  <button class="action-btn view">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#EC-999</td>
-                <td>Michael Brown</td>
-                <td>2023-06-14</td>
-                <td>$78.30</td>
-                <td><span class="status status-completed">Completed</span></td>
-                <td>
-                  <button class="action-btn view">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#EC-998</td>
-                <td>Emily Davis</td>
-                <td>2023-06-13</td>
-                <td>$312.75</td>
-                <td>
-                  <span class="status status-processing">Processing</span>
-                </td>
-                <td>
-                  <button class="action-btn process">Process</button>
-                  <button class="action-btn view">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td>#EC-997</td>
-                <td>Robert Wilson</td>
-                <td>2023-06-12</td>
-                <td>$56.20</td>
-                <td><span class="status status-cancelled">Cancelled</span></td>
-                <td>
-                  <button class="action-btn view">View</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    {% if order.status == 'Pending' %}
+    <button class="action-btn process" data-order-id="{{ order.id }}">Process</button>
+    {% endif %}
+    <a href="{% url 'dashboard:order_detail' order.pk %}" class="action-btn view">View</a>
+</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No recent orders</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
         <!-- Inventory & Quick Actions -->
         <div class="bottom-section">
@@ -433,5 +401,46 @@
         });
       });
     </script>
+    <script>
+  // Process order buttons functionality
+  document.addEventListener("DOMContentLoaded", function() {
+    // Add click event listeners to all process buttons
+    document.querySelectorAll('.action-btn.process').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const orderId = this.closest('tr').querySelector('td:first-child').textContent.replace('#', '');
+        
+        // Confirm before processing
+        if (confirm('Are you sure you want to process this order?')) {
+          fetch(`/dashboard/orders/${orderId}/process/process/`, {
+            method: 'GET',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok');
+          })
+          .then(data => {
+            if (data.success) {
+              // Reload the page to see changes
+              window.location.reload();
+            } else {
+              alert('Error processing order: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Error processing order');
+          });
+        }
+      });
+    });
+  });
+</script>
   </body>
 </html>

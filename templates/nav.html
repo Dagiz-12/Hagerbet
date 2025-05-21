@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{% static 'home/css/style.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     {% block extra_css %}{% endblock %}
   </head>
   <body>
@@ -34,8 +36,8 @@
         <input type="text" placeholder="Search Hagerbet" />
         <button class="search-button">Search</button>
       </div>
-      <!-- In your nav.html file, update the nav-icons section to this: -->
-      <div class="nav-icons">
+      
+      <div class="nav-icons" id="nav-icons">
         <div class="nav-icon language-selector">
           <i class="fas fa-globe"></i>
           <span class="icon-label">EN</span>
@@ -45,15 +47,9 @@
             <option value="am">Amharic</option>
           </select>
           <div class="dropdown-content">
-            <a href="#" data-lang="en"
-              ><i class="fas fa-language"></i> English</a
-            >
-            <a href="#" data-lang="fr"
-              ><i class="fas fa-language"></i> French</a
-            >
-            <a href="#" data-lang="am"
-              ><i class="fas fa-language"></i> Amharic</a
-            >
+            <a href="#" data-lang="en"><i class="fas fa-language"></i> English</a>
+            <a href="#" data-lang="fr"><i class="fas fa-language"></i> French</a>
+            <a href="#" data-lang="am"><i class="fas fa-language"></i> Amharic</a>
           </div>
         </div>
 
@@ -68,47 +64,48 @@
             <option value="et" data-currency="ETB">ETB</option>
           </select>
           <div class="dropdown-content">
-            <a href="#" data-currency="USD"
-              ><i class="fas fa-dollar-sign"></i> USD</a
-            >
-            <a href="#" data-currency="GBP"
-              ><i class="fas fa-pound-sign"></i> GBP</a
-            >
-            <a href="#" data-currency="EUR"
-              ><i class="fas fa-euro-sign"></i> EUR</a
-            >
-            <a href="#" data-currency="CAD"
-              ><i class="fas fa-dollar-sign"></i> CAD</a
-            >
-            <a href="#" data-currency="ETB"
-              ><i class="fas fa-money-bill-wave"></i> ETB</a
-            >
+            <a href="#" data-currency="USD"><i class="fas fa-dollar-sign"></i> USD</a>
+            <a href="#" data-currency="GBP"><i class="fas fa-pound-sign"></i> GBP</a>
+            <a href="#" data-currency="EUR"><i class="fas fa-euro-sign"></i> EUR</a>
+            <a href="#" data-currency="CAD"><i class="fas fa-dollar-sign"></i> CAD</a>
+            <a href="#" data-currency="ETB"><i class="fas fa-money-bill-wave"></i> ETB</a>
           </div>
         </div>
-
+        
         <div class="nav-icon account">
           <i class="fas fa-user"></i>
           <span class="icon-label">Account</span>
           <div class="dropdown-content">
-            <a href="#"><i class="fas fa-user-circle"></i> Profile</a>
-            <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
-            <a href="#"><i class="fas fa-cog"></i> Settings</a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+            {% if user.is_authenticated %}
+              <div class="user-info">
+                <div class="user-name">{{ user.get_full_name }}</div>
+                <div class="user-email">{{ user.email }}</div>
+              </div>
+              <div class="account-options">
+                <a href="{% url 'profiles:customer_profile' %}"><i class="fas fa-user-circle"></i> Profile</a>
+                <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <div class="dropdown-divider"></div>
+                <a href="{% url 'account_logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+              </div>
+            {% else %}
+              <div class="auth-buttons">
+                <a href="{% url 'account_login' %}" class="auth-btn login">
+                  <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="{% url 'account_signup' %}" class="auth-btn signup">
+                  <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+              </div>
+            {% endif %}
           </div>
         </div>
 
-        <div class="nav-icon cart">
+        <div class="nav-icon cart" onclick="window.location.href='{% url 'cart:view' %}'">
           <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count">0</span>
+           <span class="cart-count">0</span>
           <span class="icon-label">Cart</span>
-          <div class="dropdown-content cart-dropdown">
-            <div class="cart-header">
-              <h4>Your Cart</h4>
-              <button id="close-cart">×</button>
-            </div>
-            <div class="cart-items">
-              <p class="empty-cart-message">Your cart is empty</p>
-            </div>
+          
           </div>
         </div>
       </div>
@@ -125,32 +122,44 @@
     <script src="{% static 'home/js/cart.js' %}"></script>
     <script src="{% static 'home/js/search.js' %}"></script>
     <script src="{% static 'home/js/currency.js' %}"></script>
-    {% block extra_js %}
-    <script>
-      document.querySelectorAll(".nav-icon").forEach((icon) => {
-        icon.addEventListener("click", (e) => {
-          // Close all other dropdowns first
-          document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
-            if (otherIcon !== icon) {
-              otherIcon.classList.remove("show-dropdown");
-            }
-          });
-
-          // Toggle current dropdown
-          icon.classList.toggle("show-dropdown");
-        });
-      });
-
-      // Close dropdowns when clicking outside
-      document.addEventListener("click", (e) => {
-        if (!e.target.closest(".nav-icon")) {
-          document.querySelectorAll(".nav-icon").forEach((icon) => {
-            icon.classList.remove("show-dropdown");
-          });
-        }
-      });
-    </script>
-
-    {% endblock %}
   </body>
+  {% block extra_js %}
+ <script>
+// nav.html dropdown fix
+document.addEventListener("DOMContentLoaded", function() {
+    // Account dropdown handler
+    function handleAccountDropdown(e) {
+        const icon = e.target.closest('.nav-icon.account');
+        if (!icon) return;
+
+        e.stopPropagation();
+        const wasOpen = icon.classList.contains('open');
+        
+        // Close all dropdowns
+        document.querySelectorAll('.nav-icon').forEach(el => 
+            el.classList.remove('open')
+        );
+        
+        // Toggle current dropdown
+        if (!wasOpen) icon.classList.add('open');
+    }
+
+    // Click outside handler
+    function closeAllDropdowns(e) {
+        if (!e.target.closest('.nav-icon')) {
+            document.querySelectorAll('.nav-icon').forEach(el => 
+                el.classList.remove('open')
+            );
+        }
+    }
+
+    // Event listeners
+    document.addEventListener('click', handleAccountDropdown);
+    document.addEventListener('click', closeAllDropdowns);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAllDropdowns(e);
+    });
+});
+</script>
+  {% endblock %}
 </html>

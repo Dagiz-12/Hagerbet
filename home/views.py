@@ -9,7 +9,7 @@ from django.views import generic
 from django.views.generic.detail import DetailView
 
 from products.models import Catagories, Products
-from users.models import Users
+from users.models import CustomUser
 
 # views.py
 from django.http import JsonResponse

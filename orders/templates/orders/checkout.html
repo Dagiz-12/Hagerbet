@@ -1,0 +1,680 @@
+{% extends "nav.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+  :root {
+    --primary: #0066cc;
+    --secondary: #f8f9fa;
+    --success: #28a745;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+  }
+  
+  .checkout-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .checkout-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .checkout-header h1 {
+    font-size: 2.5rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+  }
+  
+  .checkout-header p {
+    color: #6c757d;
+  }
+  
+  .checkout-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1.5rem;
+    position: relative;
+  }
+  
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .step.active .step-number {
+    background-color: var(--primary);
+    color: white;
+  }
+  
+  .step.completed .step-number {
+    background-color: var(--success);
+    color: white;
+  }
+  
+  .step-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .step.active .step-title {
+    color: var(--primary);
+    font-weight: bold;
+  }
+  
+  .step.completed .step-title {
+    color: var(--success);
+  }
+  
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    width: 100px;
+    height: 2px;
+    background-color: #e9ecef;
+  }
+  
+  .checkout-content {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .checkout-form-section {
+    flex: 2;
+  }
+  
+  .order-summary-section {
+    flex: 1;
+  }
+  
+  .checkout-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .checkout-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out;
+  }
+  
+  .form-control:focus {
+    border-color: var(--primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .form-check-input {
+    margin-right: 0.5rem;
+  }
+  
+  .payment-method-radio {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .payment-method-radio li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .payment-method-radio label {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .payment-method-radio label:hover {
+    border-color: var(--primary);
+  }
+  
+  .payment-method-radio input[type="radio"]:checked + label {
+    border-color: var(--primary);
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+  
+  .payment-method-icon {
+    margin-right: 0.75rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+  }
+  
+  .payment-details {
+    padding: 1rem;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    margin-top: 1rem;
+    display: none;
+  }
+  
+  .payment-details.active {
+    display: block;
+  }
+  
+  .order-summary-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .order-summary-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-right: 1rem;
+  }
+  
+  .order-summary-details {
+    flex: 1;
+  }
+  
+  .order-summary-name {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .order-summary-price {
+    color: #6c757d;
+  }
+  
+  .order-summary-total {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .order-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  
+  .order-summary-grand-total {
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+  
+  .btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 4px;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    color: white;
+    background-color: var(--primary);
+    border-color: var(--primary);
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  @media (max-width: 768px) {
+    .checkout-content {
+      flex-direction: column;
+    }
+    
+    .step:not(:last-child)::after {
+      width: 50px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h1>Checkout</h1>
+    <p>Complete your purchase in just a few steps</p>
+  </div>
+  
+  <div class="checkout-steps">
+    <div class="step completed">
+      <div class="step-number">1</div>
+      <div class="step-title">Cart</div>
+    </div>
+    <div class="step active">
+      <div class="step-number">2</div>
+      <div class="step-title">Information</div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-title">Payment</div>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <div class="step-title">Confirmation</div>
+    </div>
+  </div>
+  
+  <div class="checkout-content">
+    <div class="checkout-form-section">
+      <form method="post" id="checkout-form">
+        {% csrf_token %}
+        
+        <div class="checkout-card">
+          <h2>Shipping Information</h2>
+          
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="{{ form.shipping_first_name.id_for_label }}" class="form-label">
+                  {{ form.shipping_first_name.label }}
+                </label>
+                {{ form.shipping_first_name }}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.shipping_last_name.id_for_label }}" class="form-label">
+                  {{ form.shipping_last_name.label }}
+                </label>
+                {{ form.shipping_last_name }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="{{ form.shipping_address.id_for_label }}" class="form-label">
+              {{ form.shipping_address.label }}
+            </label>
+            {{ form.shipping_address }}
+          </div>
+          
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="{{ form.shipping_city.id_for_label }}" class="form-label">
+                  {{ form.shipping_city.label }}
+                </label>
+                {{ form.shipping_city }}
+              </div>
+              <div class="col-md-4">
+                <label for="{{ form.shipping_state.id_for_label }}" class="form-label">
+                  {{ form.shipping_state.label }}
+                </label>
+                {{ form.shipping_state }}
+              </div>
+              <div class="col-md-4">
+                <label for="{{ form.shipping_zip.id_for_label }}" class="form-label">
+                  {{ form.shipping_zip.label }}
+                </label>
+                {{ form.shipping_zip }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="{{ form.shipping_country.id_for_label }}" class="form-label">
+              {{ form.shipping_country.label }}
+            </label>
+            {{ form.shipping_country }}
+          </div>
+          
+          <div class="form-group">
+            <label for="{{ form.shipping_phone.id_for_label }}" class="form-label">
+              {{ form.shipping_phone.label }}
+            </label>
+            {{ form.shipping_phone }}
+          </div>
+        </div>
+        
+        <div class="checkout-card">
+          <h2>Billing Information</h2>
+          
+          <div class="form-check">
+            {{ form.same_billing_address }}
+            <label for="{{ form.same_billing_address.id_for_label }}" class="form-check-label">
+              {{ form.same_billing_address.label }}
+            </label>
+          </div>
+          
+          <div id="billing-fields" style="display: none;">
+            <!-- Billing fields would be shown here when checkbox is unchecked -->
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="{{ form.billing_first_name.id_for_label }}" class="form-label">
+                    {{ form.billing_first_name.label }}
+                  </label>
+                  {{ form.billing_first_name }}
+                </div>
+                <div class="col-md-6">
+                  <label for="{{ form.billing_last_name.id_for_label }}" class="form-label">
+                    {{ form.billing_last_name.label }}
+                  </label>
+                  {{ form.billing_last_name }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="{{ form.billing_address.id_for_label }}" class="form-label">
+                {{ form.billing_address.label }}
+              </label>
+              {{ form.billing_address }}
+            </div>
+            
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="{{ form.billing_city.id_for_label }}" class="form-label">
+                    {{ form.billing_city.label }}
+                  </label>
+                  {{ form.billing_city }}
+                </div>
+                <div class="col-md-4">
+                  <label for="{{ form.billing_state.id_for_label }}" class="form-label">
+                    {{ form.billing_state.label }}
+                  </label>
+                  {{ form.billing_state }}
+                </div>
+                <div class="col-md-4">
+                  <label for="{{ form.billing_zip.id_for_label }}" class="form-label">
+                    {{ form.billing_zip.label }}
+                  </label>
+                  {{ form.billing_zip }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="{{ form.billing_country.id_for_label }}" class="form-label">
+                {{ form.billing_country.label }}
+              </label>
+              {{ form.billing_country }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="checkout-card">
+          <h2>Payment Method</h2>
+          
+          <div class="form-group">
+            {{ form.payment_method }}
+          </div>
+          
+          <!-- Credit Card Fields -->
+          <div id="credit-card-fields" class="payment-details">
+            <div class="form-group">
+              <label for="{{ form.card_number.id_for_label }}" class="form-label">
+                Card Number
+              </label>
+              {{ form.card_number }}
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.card_expiry.id_for_label }}" class="form-label">
+                    Expiration Date
+                  </label>
+                  {{ form.card_expiry }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.card_cvv.id_for_label }}" class="form-label">
+                    CVV
+                  </label>
+                  {{ form.card_cvv }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="{{ form.card_name.id_for_label }}" class="form-label">
+                Name on Card
+              </label>
+              {{ form.card_name }}
+            </div>
+          </div>
+          
+          <!-- TeleBirr Fields -->
+          <div id="telebirr-fields" class="payment-details">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> You will be redirected to TeleBirr to complete your payment.
+            </div>
+            <div class="form-group">
+              <label for="{{ form.telebirr_phone.id_for_label }}" class="form-label">
+                TeleBirr Phone Number
+              </label>
+              {{ form.telebirr_phone }}
+            </div>
+          </div>
+          
+          <!-- CBE Birr Fields -->
+          <div id="cbe-birr-fields" class="payment-details">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> You will be redirected to CBE Birr to complete your payment.
+            </div>
+            <div class="form-group">
+              <label for="{{ form.cbe_birr_account.id_for_label }}" class="form-label">
+                CBE Account Number
+              </label>
+              {{ form.cbe_birr_account }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="checkout-card">
+          <div class="form-check">
+            {{ form.accept_terms }}
+            <label for="{{ form.accept_terms.id_for_label }}" class="form-check-label">
+              I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+            </label>
+          </div>
+          
+          <button type="submit" class="btn btn-primary mt-3">
+            Complete Order
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="order-summary-section">
+      <div class="checkout-card">
+        <h2>Order Summary</h2>
+        
+        {% for item in cart_items %}
+        <div class="order-summary-item">
+          <img src="{{ item.image }}" alt="{{ item.name }}" class="order-summary-image">
+          <div class="order-summary-details">
+            <div class="order-summary-name">{{ item.name }}</div>
+            <div class="order-summary-price">
+              ${{ item.price }} × {{ item.quantity }}
+            </div>
+          </div>
+          <div class="order-summary-total-price">
+            ${{ item.total|floatformat:2 }}
+          </div>
+        </div>
+        {% endfor %}
+        
+        <div class="order-summary-total">
+          <div class="order-summary-row">
+            <span>Subtotal</span>
+            <span>${{ total_price|floatformat:2 }}</span>
+          </div>
+          <div class="order-summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+          <div class="order-summary-row order-summary-grand-total">
+            <span>Total</span>
+            <span>${{ total_price|floatformat:2 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+         <div class="modal-header">
+        <h5 class="modal-title">Terms and Conditions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Your terms and conditions content here -->
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+        <!-- Add more content as needed -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Toggle billing fields
+  const sameBillingCheckbox = document.querySelector('#id_same_billing_address');
+  const billingFields = document.querySelector('#billing-fields');
+  
+  sameBillingCheckbox.addEventListener('change', function() {
+    billingFields.style.display = this.checked ? 'none' : 'block';
+  });
+  
+  // Toggle payment method fields
+  const paymentMethodRadios = document.querySelectorAll('input[name="payment_method"]');
+  const paymentDetails = document.querySelectorAll('.payment-details');
+  
+  function updatePaymentFields() {
+    const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    // Hide all payment details first
+    paymentDetails.forEach(detail => {
+      detail.style.display = 'none';
+    });
+    
+    // Show the selected payment method's details
+    if (selectedMethod === 'credit_card') {
+      document.querySelector('#credit-card-fields').style.display = 'block';
+    } else if (selectedMethod === 'telebirr') {
+      document.querySelector('#telebirr-fields').style.display = 'block';
+    } else if (selectedMethod === 'cbe_birr') {
+      document.querySelector('#cbe-birr-fields').style.display = 'block';
+    }
+  }
+  
+  paymentMethodRadios.forEach(radio => {
+    radio.addEventListener('change', updatePaymentFields);
+  });
+  
+  // Initialize fields on page load
+  updatePaymentFields();
+  
+  // Form validation
+  const form = document.querySelector('#checkout-form');
+  form.addEventListener('submit', function(e) {
+    if (!document.querySelector('#id_accept_terms').checked) {
+      e.preventDefault();
+      alert('You must accept the terms and conditions to proceed.');
+    }
+    
+    // Add additional validation as needed
+    const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    if (selectedMethod === 'credit_card') {
+      const cardNumber = document.querySelector('#id_card_number').value;
+      if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
+        e.preventDefault();
+        alert('Please enter a valid credit card number.');
+        return;
+      }
+    } else if (selectedMethod === 'telebirr') {
+      const phone = document.querySelector('#id_telebirr_phone').value;
+      if (!phone) {
+        e.preventDefault();
+        alert('Please enter your TeleBirr phone number.');
+        return;
+      }
+    } else if (selectedMethod === 'cbe_birr') {
+      const account = document.querySelector('#id_cbe_birr_account').value;
+      if (!account) {
+        e.preventDefault();
+        alert('Please enter your CBE account number.');
+        return;
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,79 +1,204 @@
-{% load static %} {% csrf_token %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Cart - Hagerbet</title>
-    <link rel="stylesheet" href="{% static 'home/css/style.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <style>
-      .cart-container {
+{% extends "nav.html" %}
+{% load static %}
+
+{% block title %}Your Cart - Hagerbet{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+    <div class="cart-header">
+        <h1 class="cart-title">Your Shopping Cart</h1>
+        <a href="{% url 'home:home' %}" class="continue-shopping">
+            <i class="fas fa-arrow-left"></i> Continue Shopping
+        </a>
+    </div>
+
+    {% if cart %}
+    <div class="cart-main">
+        <div class="cart-items-container">
+    {% for item in cart %}
+    <div class="cart-item">
+                    <!-- Remove button -->
+                <form method="post" action="{% url 'cart:remove' item.id %}" class="remove-form">
+                    {% csrf_token %}
+                    <button type="submit" class="remove-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+
+        <div class="cart-item-image-container">
+            <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-image">
+        </div>
+        <div class="cart-item-details">
+            <h3 class="cart-item-name">{{ item.name }}</h3>
+            <p class="cart-item-price">${{ item.price }}</p>
+            
+             <form method="post" action="{% url 'cart:update' item.id %}" class="quantity-form">
+                    {% csrf_token %}
+                    <div class="quantity-controls">
+                        <button type="button" class="quantity-btn minus">−</button>
+                        <input type="number" name="quantity" value="{{ item.quantity }}" 
+                               min="0" class="quantity-input">  <!-- Changed min to 0 -->
+                        <button type="button" class="quantity-btn plus">+</button>
+                    </div>
+                </form>
+            
+            <p class="item-total">${{ item.price|floatformat:2 }} × {{ item.quantity }} = ${{ item.total|floatformat:2 }}</p>
+        </div>
+    </div>
+
+     <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{ cart.total_price|floatformat:2 }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>FREE</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>${{ item.total|floatformat:2 }}</span>
+            </div>
+            <a href="{% url 'orders:checkout' %}" class="checkout-btn">Proceed to Checkout</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+          
+       
+    {% else %}
+    <div class="empty-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Your cart is empty</h3>
+        <p>Browse our products and find something you like</p>
+        <a href="{% url 'home:home' %}" class="continue-shopping">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<script src="{% static 'home/js/cart.js' %}"></script>
+    <script src="{% static 'home/js/search.js' %}"></script>
+    <script src="{% static 'home/js/currency.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    .cart-container {
         max-width: 1200px;
         margin: 2rem auto;
         padding: 0 1rem;
-      }
+    }
 
-      .cart-header {
+    .cart-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
-      }
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
 
-      .cart-title {
+    .cart-title {
         font-size: 2rem;
         color: #333;
-      }
+        margin: 0;
+    }
 
-      .cart-items {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .cart-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .cart-item-image {
-        width: 100px;
-        height: 100px;
-        object-fit: contain;
-        margin-right: 1.5rem;
-      }
-
-      .cart-item-details {
-        flex-grow: 1;
-      }
-
-      .cart-item-name {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
-        color: #333;
-      }
-
-      .cart-item-price {
-        font-weight: bold;
-        color: #e63946;
-        margin-bottom: 0.5rem;
-      }
-
-      .quantity-controls {
-        display: flex;
+    .continue-shopping {
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-      }
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.3s;
+    }
 
-      .quantity-btn {
+    .continue-shopping:hover {
+        background: #e9ecef;
+        text-decoration: none;
+    }
+
+    .cart-main {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .cart-items-container {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    
+
+
+
+    .cart-summary {
+        width: 300px;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        height: fit-content;
+    }
+
+    .cart-item {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .cart-item-image-container {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cart-item-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .cart-item-details {
+        flex: 1;
+    }
+
+    .cart-item-name {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .cart-item-price {
+        font-weight: bold;
+        color: #e63946;
+        margin: 0 0 1rem 0;
+    }
+
+    .quantity-form {
+        margin: 1rem 0;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        color: dark;
+        padding: 2px;
+    }
+
+    .quantity-btn {
         width: 30px;
         height: 30px;
         border: 1px solid #ddd;
@@ -85,258 +210,193 @@
         justify-content: center;
         border-radius: 4px;
         user-select: none;
-      }
+        color: black;
+        padding: 2px;
+    }
 
-      .quantity-btn,
-      .remove-item {
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .quantity-btn:hover {
+    .quantity-btn:hover {
         background: #e9ecef;
-      }
+    }
 
-      .remove-item {
+    .quantity-input {
+        width: 50px;
+        padding: 0.3rem;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: black;
+
+    }
+
+    .update-btn {
+        padding: 0.3rem 0.8rem;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .update-btn:hover {
+        background: #e9ecef;
+    }
+
+    .item-total {
+        font-weight: bold;
+        margin: 0.5rem 0 0 0;
+    }
+
+    .remove-form {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .remove-btn {
         background: none;
         border: none;
-        font-size: 1.5rem;
         color: #999;
         cursor: pointer;
+        font-size: 1.2rem;
         padding: 0.5rem;
-      }
+    }
 
-      .remove-item:hover {
+    .remove-btn:hover {
         color: #e63946;
-        transform: scale(1.2);
-      }
+    }
 
-      .cart-summary {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
+    .remove-item {
+        background: none;
+        border: none;
+        color: black;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+    }
 
-      .summary-row {
+    .remove-item:hover {
+        color: #e63946;
+    }
+
+    .summary-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 1rem;
-      }
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid #eee;
+    }
 
-      .summary-total {
-        font-size: 1.2rem;
+    .summary-total {
         font-weight: bold;
-        border-top: 1px solid #eee;
-        padding-top: 1rem;
-      }
+        font-size: 1.1rem;
+        border-bottom: none;
+    }
 
-      .checkout-btn {
+    .checkout-btn {
+        display: block;
         width: 100%;
-        padding: 1rem;
+        padding: 0.8rem;
+        margin-top: 1.5rem;
         background: #e63946;
         color: white;
+        text-align: center;
+        text-decoration: none;
         border: none;
         border-radius: 4px;
-        font-size: 1.1rem;
+        font-size: 1rem;
         cursor: pointer;
-        margin-top: 1rem;
-        transition: background 0.3s;
-      }
+        transition: all 0.3s;
+    }
 
-      .checkout-btn:hover {
+    .checkout-btn:hover {
         background: #c1121f;
-      }
+    }
 
-      .empty-cart {
+    .empty-cart {
         text-align: center;
-        padding: 3rem;
-      }
+        padding: 3rem 0;
+    }
 
-      .empty-cart i {
+    .empty-cart i {
         font-size: 5rem;
         color: #ddd;
-        margin-bottom: 1rem;
-      }
+        margin-bottom: 1.5rem;
+    }
 
-      .empty-cart p {
-        font-size: 1.2rem;
+    .empty-cart h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .empty-cart p {
         color: #666;
         margin-bottom: 1.5rem;
-      }
+    }
 
-      .continue-shopping {
-        display: inline-block;
-        padding: 0.8rem 1.5rem;
-        background: #f8f9fa;
-        color: #333;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background 0.3s;
-      }
+    @media (max-width: 768px) {
+        .cart-main {
+            flex-direction: column;
+        }
+        
+        .cart-summary {
+            width: 100%;
+        }
+    }
+</style>
 
-      .continue-shopping:hover {
-        background: #e9ecef;
-      }
 
-      .back-to-home {
-        display: inline-block;
-        margin-bottom: 1.5rem;
-        padding: 0.5rem 1rem;
-        background: #f8f9fa;
-        color: #333;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background 0.3s;
-      }
+{% endblock %}
+<script src="{% static 'home/js/cart.js' %}"></script>
+    <script src="{% static 'home/js/search.js' %}"></script>
+    <script src="{% static 'home/js/currency.js' %}"></script>
+  
 
-      .back-to-home:hover {
-        background: #e9ecef;
-      }
+{% block extra_js %}
 
-      .back-to-home i {
-        margin-right: 0.5rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="cart-container">
-      <a href="{% url 'home:home' %}" class="back-to-home">
-        <i class="fas fa-arrow-left"></i> Back to Home
-      </a>
-      <div class="cart-header">
-        <h1 class="cart-title">Your Shopping Cart</h1>
-      </div>
-
-      <div class="cart-content">
-        {% if cart_items %}
-        <div class="cart-items">
-          {% for item in cart_items %}
-          <div class="cart-item" data-id="{{ item.id }}">
-            <img
-              src="{{ item.image }}"
-              alt="{{ item.name }}"
-              class="cart-item-image"
-            />
-            <div class="cart-item">
-              <h3 class="cart-item-name">{{ item.name }}</h3>
-              <div
-                class="cart-item-price"
-                data-price-original="{{ item.price }}"
-              >
-                ${{ item.price }}
-              </div>
-              <div class="quantity-controls">
-                <button class="quantity-btn minus">-</button>
-                <span class="quantity">{{ item.quantity }}</span>
-                <button class="quantity-btn plus">+</button>
-              </div>
-            </div>
-            <button class="remove-item">×</button>
-          </div>
-          {% endfor %}
-        </div>
-
-        <div class="cart-summary">
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span>${{ subtotal }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Shipping</span>
-            <span>Free</span>
-          </div>
-          <div class="summary-row summary-total">
-            <span>Total</span>
-            <span>${{ total }}</span>
-          </div>
-          <button class="checkout-btn">Proceed to Checkout</button>
-        </div>
-        {% else %}
-        <div class="empty-cart">
-          <i class="fas fa-shopping-cart"></i>
-          <p>Your cart is empty</p>
-          <a href="{% url 'home:home' %}" class="continue-shopping"
-            >Continue Shopping</a
-          >
-        </div>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- Section 4 - Footer Links -->
-    <section class="section-4">
-      <div class="something">
-        <a href="#"><i class="fas fa-shield-alt"></i> Trade Assurances</a>
-        <a href="#"><i class="fas fa-question-circle"></i> Get Support</a>
-        <a href="#"><i class="fas fa-store"></i> Sell on Hagerbet</a>
-        <a href="#"><i class="fas fa-info-circle"></i> Get to Know us</a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="info">
-        <a href="#">Contact us</a>
-        <a href="#">Sign in</a>
-        <a href="#">About</a>
-      </div>
-      <div class="social-media">
-        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-      </div>
-      <div class="coop">
-        <p>Hagerbet PLC 2025 ©</p>
-      </div>
-    </footer>
-
-    <script src="{% static 'home/js/cart.js' %}"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Initialize cart functionality
-        initializeCartPage();
-      });
-
-      function initializeCartPage() {
-        // Quantity controls - fixed implementation
-        document.querySelectorAll(".minus").forEach((btn) => {
-          btn.addEventListener("click", function (e) {
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Fix quantity controls
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
             e.preventDefault();
-            const itemId = this.closest(".cart-item").dataset.id;
-            updateCartItem(itemId, -1);
-          });
+            const input = this.parentElement.querySelector('.quantity-input');
+            let value = parseInt(input.value);
+            
+            // Only change by 1
+            if (this.classList.contains('minus')) {
+                value = Math.max(1, value - 1);
+            } else {
+                value += 1;
+            }
+            
+            input.value = value;
+            
+            // Submit the form
+            const form = this.closest('form');
+            if (form) {
+                form.requestSubmit();
+            }
         });
+    });
 
-        document.querySelectorAll(".plus").forEach((btn) => {
-          btn.addEventListener("click", function (e) {
+    // Prevent multiple event listeners
+    document.querySelectorAll('.quantity-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const itemId = this.closest(".cart-item").dataset.id;
-            updateCartItem(itemId, 1);
-          });
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            });
         });
-
-        document.querySelectorAll(".remove-item").forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const itemId = this.closest(".cart-item").dataset.id;
-            removeCartItem(itemId);
-          });
-        });
-
-        // Override cart.js functions to reload page after updates
-        const originalUpdateCartItem = window.updateCartItem;
-        window.updateCartItem = function (productId, change) {
-          originalUpdateCartItem(productId, change);
-        };
-
-        const originalRemoveCartItem = window.removeCartItem;
-        window.removeCartItem = function (productId) {
-          originalRemoveCartItem(productId);
-        };
-      }
-    </script>
-  </body>
-</html>
+    });
+});
+</script>
+{% endblock %}

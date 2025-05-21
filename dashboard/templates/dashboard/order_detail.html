@@ -1,0 +1,202 @@
+{% load static %}
+{% load custom_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/other.css' %}">
+  
+</head>
+<body>
+{% block content %}
+   <div class="content">
+    <h1 class="page-title">Order Details #{{ order.id }}</h1>
+    
+    <div class="order-actions-top">
+        <a href="{% url 'dashboard:generate_receipt' order.pk %}" class="action-btn download">
+            <i class="fas fa-file-pdf"></i> Download Receipt
+        </a>
+        <a href="{% url 'dashboard:order_history' %}" class="action-btn back">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+    
+    <div class="order-details-container">
+        <div class="order-section">
+            <h3>Order Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Order Date:</span>
+                <span>{{ order.order_date|date:"F j, Y, g:i a" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="status status-{{ order.status|lower }}">{{ order.status }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span>{{ order.get_payment_method_display }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Status:</span>
+                <span class="status status-{% if order.payment_complete %}completed{% else %}pending{% endif %}">
+                    {% if order.payment_complete %}Paid{% else %}Pending{% endif %}
+                </span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total Amount:</span>
+                <span>${{ order.total_price }}</span>
+            </div>
+        </div>
+        
+        <div class="order-section">
+            <h3>Customer Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span>{{ order.user.get_full_name|default:order.user.username }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span>{{ order.user.email }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Customer Since:</span>
+                <span>{{ order.user.date_joined|date:"F j, Y" }}</span>
+            </div>
+        </div>
+        
+        <div class="order-section">
+            <h3>Shipping Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span>{{ order.shipping_first_name }} {{ order.shipping_last_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Address:</span>
+                <span>{{ order.shipping_address }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">City:</span>
+                <span>{{ order.shipping_city }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">State:</span>
+                <span>{{ order.shipping_state }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Zip Code:</span>
+                <span>{{ order.shipping_zip }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Country:</span>
+                <span>{{ order.shipping_country }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Phone:</span>
+                <span>{{ order.shipping_phone }}</span>
+            </div>
+        </div>
+        
+        {% if order.billing_address %}
+        <div class="order-section">
+            <h3>Billing Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span>{{ order.billing_first_name }} {{ order.billing_last_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Address:</span>
+                <span>{{ order.billing_address }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">City:</span>
+                <span>{{ order.billing_city }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">State:</span>
+                <span>{{ order.billing_state }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Zip Code:</span>
+                <span>{{ order.billing_zip }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Country:</span>
+                <span>{{ order.billing_country }}</span>
+            </div>
+        </div>
+        {% endif %}
+        
+        
+
+ <div class="order-section">
+    <h3>Order Items</h3>
+    {% with items=order.items_list %}
+    {% if items %}
+    <table class="order-items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>${{ item.price|floatformat:2 }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.total|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-items">No items found in this order</div>
+    {% endif %}
+    {% endwith %}
+</div>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="4" style="text-align: right;">Subtotal:</td>
+                <td>${{ order.total_price|floatformat:2 }}</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="4" style="text-align: right;">Shipping:</td>
+                <td>$0.00</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="4" style="text-align: right;">Total:</td>
+                <td>${{ order.total_price|floatformat:2 }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+        </div>
+        
+        <div class="order-actions">
+            {% if order.status == 'Pending' %}
+            <a href="{% url 'dashboard:process_order' order.pk 'process' %}" class="action-btn process">
+                <i class="fas fa-cog"></i> Process Order
+            </a>
+            {% elif order.status == 'Processing' %}
+            <a href="{% url 'dashboard:process_order' order.pk 'ship' %}" class="action-btn ship">
+                <i class="fas fa-truck"></i> Mark as Shipped
+            </a>
+            {% elif order.status == 'Shipped' %}
+            <a href="{% url 'dashboard:process_order' order.pk 'deliver' %}" class="action-btn deliver">
+                <i class="fas fa-check-circle"></i> Mark as Delivered
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'dashboard:order_update' order.pk %}" class="action-btn edit">
+                <i class="fas fa-edit"></i> Edit Status
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

@@ -1,7 +1,15 @@
-<h1>User {{ users.fname }}</h1>
-<p>{{ users.lname }}</p>
-<p>{{ users.email }}</p>
-<p>{{ users.password }}</p>
+<h1>User Details</h1>
+<p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Phone:</strong> {{ user.phone|default:"Not provided" }}</p>
+<p><strong>Address:</strong> {{ user.address|default:"Not provided" }}</p>
+<p><strong>Role:</strong> {{ user.get_role_display }}</p>
+<p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+
+{% if request.user.is_superuser or request.user.role == 'ADMIN' %}
 <p>
-  <a href="{% url 'users:main' %}">Go back to list</a>
+  <a href="{% url 'users:update' user.id %}">Edit</a> |
+  <a href="{% url 'users:delete' user.id %}">Delete</a> |
+  <a href="{% url 'users:main' %}">Back to list</a>
 </p>
+{% endif %}

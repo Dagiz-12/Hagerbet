@@ -16,25 +16,29 @@ Including another URLconf
 """
 import os
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
-from django.contrib.auth import views as auth_views
-from django.views.static import serve
-from django.views.generic import TemplateView
 from django.conf.urls.static import static
 
-
 urlpatterns = [
-    path('', include('home.urls')),
+    # Admin
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
+
+    # Allauth URLs (handles registration/login/password management)
+    path('accounts/', include('allauth.urls')),
+
+    # Your apps
+    path('', include('home.urls')),
     path('products/', include('products.urls')),
     path('users/', include('users.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('cart/', include('cart.urls')),
+    path('profiles/', include('profiles.urls')),
+    path('orders/', include('orders.urls', namespace='orders')),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+# For development media files
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Receipt #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .receipt-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .receipt-title {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .label {
+            font-weight: bold;
+            width: 150px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <div class="company-name">Hagerbet E-Commerce</div>
+            <div class="receipt-title">Order Receipt</div>
+            <div>Order #{{ order.id }}</div>
+            <div>Date: {{ order.order_date|date:"F j, Y" }}</div>
+        </div>
+
+        <div class="receipt-info">
+            <div class="info-block">
+                <div class="section-title">Customer Information</div>
+                <div class="row">
+                    <span class="label">Name:</span>
+                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                </div>
+                <div class="row">
+                    <span class="label">Email:</span>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="row">
+                    <span class="label">Order Status:</span>
+                    <span>{{ order.status }}</span>
+                </div>
+                <div class="row">
+                    <span class="label">Payment Method:</span>
+                    <span>{{ order.get_payment_method_display }}</span>
+                </div>
+                <div class="row">
+                    <span class="label">Payment Status:</span>
+                    <span>{% if order.payment_complete %}Paid{% else %}Pending{% endif %}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Shipping Information</div>
+            <div class="row">
+                <span class="label">Name:</span>
+                <span>{{ order.shipping_first_name }} {{ order.shipping_last_name }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Address:</span>
+                <span>{{ order.shipping_address }}</span>
+            </div>
+            <div class="row">
+                <span class="label">City:</span>
+                <span>{{ order.shipping_city }}</span>
+            </div>
+            <div class="row">
+                <span class="label">State:</span>
+                <span>{{ order.shipping_state }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Zip Code:</span>
+                <span>{{ order.shipping_zip }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Country:</span>
+                <span>{{ order.shipping_country }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Phone:</span>
+                <span>{{ order.shipping_phone }}</span>
+            </div>
+        </div>
+
+        {% if order.billing_address %}
+        <div class="section">
+            <div class="section-title">Billing Information</div>
+            <div class="row">
+                <span class="label">Name:</span>
+                <span>{{ order.billing_first_name }} {{ order.billing_last_name }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Address:</span>
+                <span>{{ order.billing_address }}</span>
+            </div>
+            <div class="row">
+                <span class="label">City:</span>
+                <span>{{ order.billing_city }}</span>
+            </div>
+            <div class="row">
+                <span class="label">State:</span>
+                <span>{{ order.billing_state }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Zip Code:</span>
+                <span>{{ order.billing_zip }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Country:</span>
+                <span>{{ order.billing_country }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+   <div class="order-section">
+    <h3>Order Items</h3>
+    {% with items=order.items_list %}
+    {% if items %}
+    <table class="order-items-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>${{ item.price|floatformat:2 }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.total|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-items">No items found in this order</div>
+    {% endif %}
+    {% endwith %}
+</div>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Subtotal:</td>
+                        <td>${{ order.total_price }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Shipping:</td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Total:</td>
+                        <td>${{ order.total_price }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your order!</p>
+            <p>Hagerbet E-Commerce | support@hagerbet.com | +251 123 456 789</p>
+        </div>
+    </div>
+</body>
+</html>

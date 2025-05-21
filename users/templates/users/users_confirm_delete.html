@@ -1,12 +1,11 @@
 {% block content %}
+<h1>Confirm Delete</h1>
 
-<h1>Delete User</h1>
+<p>Are you sure you want to delete the user: {{ object.email }}?</p>
 
-<p>Are you sure you want to delete the auto: {{ user }}?</p>
-
-<form action="" method="POST">
+<form method="post">
   {% csrf_token %}
-  <input type="submit" value="Yes, delete." />
+  <input type="submit" value="Yes, delete" />
+  <a href="{% url 'users:detail' object.id %}">Cancel</a>
 </form>
-
 {% endblock %}

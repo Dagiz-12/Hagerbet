@@ -31,13 +31,20 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',  # Custom user model
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'django_recaptcha',
 
 
     # Extensions - installed with pip3 / requirements.txt
@@ -48,12 +55,67 @@ INSTALLED_APPS = [
     'admins.apps.AdminsConfig',
     'home.apps.HomeConfig',
     'products.apps.ProductsConfig',
-    'users.apps.UsersConfig',
+
     'dashboard.apps.DashboardConfig',
     'cart.apps.CartConfig',
+    'profiles.apps.ProfilesConfig',
+    'orders.apps.OrdersConfig',
 
 
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'dagmawizelalem14@gmail.com'
+EMAIL_HOST_PASSWORD = 'hjfk geun dfts zugr'
+DEFAULT_FROM_EMAIL = 'dagmawizelalem14@gmail.com'
+
+# Allauth settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Required settings
+RECAPTCHA_PUBLIC_KEY = 'your_public_key_from_google'
+RECAPTCHA_PRIVATE_KEY = 'your_private_key_from_google'
+
+# Optional settings (add as needed)
+RECAPTCHA_REQUIRED_SCORE = 0.85
+RECAPTCHA_PROXY = {'http': 'http://proxy.example.com',
+                   'https': 'https://proxy.example.com'}
+
+# AUTHENTICATION SETTINGS
+
+
+LOGIN_REDIRECT_URL = '/profiles/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# Social account providers (optional)
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+
+CART_SESSION_ID = 'hagerbet_cart'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,6 +125,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hagerbet.urls'
@@ -70,7 +133,8 @@ ROOT_URLCONF = 'hagerbet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +143,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cart.context_processors.cart',
             ],
         },
     },

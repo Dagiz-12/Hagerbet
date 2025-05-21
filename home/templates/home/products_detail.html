@@ -1,6 +1,72 @@
 {% extends "nav.html" %} {% load static %} {% block title %}{{ product.name }} -
 Hagerbet{% endblock %} {% block content %}
 
+<style>
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.quantity-btn {
+    width: 36px;
+    height: 36px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-btn:hover {
+    background: #e0e0e0;
+}
+
+.quantity-btn:active {
+    background: #d0d0d0;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 36px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.product-actions {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.add-to-cart {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-to-cart:hover {
+    background: #0069d9;
+}
+</style>
+
 <!-- Main Content -->
 <main class="main-content">
   <div class="product-detail-container">
@@ -94,27 +160,21 @@ Hagerbet{% endblock %} {% block content %}
           </div>
         </div>
 
-        <div class="product-actions">
-          <div class="quantity-selector">
-            <button class="quantity-btn minus">-</button>
-            <input type="number" value="1" min="1" class="quantity-input" />
-            <button class="quantity-btn plus">+</button>
-          </div>
-
-          <button
-            class="add-to-cart primary-action"
-            data-id="{{ product.id }}"
-            data-name="{{ product.product_name }}"
-            data-price="{{ product.price|floatformat:2 }}"
-            data-image="{{ product.image.url }}"
-          >
+<div class="product-actions">
+    <div class="quantity-selector">
+        <button type="button" class="quantity-btn minus" aria-label="Decrease quantity">−</button>
+        <input type="number" value="1" min="1" class="quantity-input" name="quantity" aria-label="Quantity">
+        <button type="button" class="quantity-btn plus" aria-label="Increase quantity">+</button>
+    </div>
+    
+    <form method="post" action="{% url 'cart:add_to_cart' product.id %}" class="add-to-cart-form">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" class="form-quantity-input" value="1">
+        <button type="submit" class="add-to-cart primary-action" data-id="{{ product.id }}" >
             <i class="fas fa-shopping-cart"></i> Add to Cart
-          </button>
-
-          <button class="wishlist-btn secondary-action">
-            <i class="far fa-heart"></i> Add to Wishlist
-          </button>
-        </div>
+        </button>
+    </form>
+</div>
 
         <div class="delivery-options">
           <div class="delivery-option">
@@ -265,46 +325,32 @@ Hagerbet{% endblock %} {% block content %}
 </footer>
 
 {% endblock %} {% block extra_js %}
+
 <script>
-  // Tab functionality
-  document.addEventListener("DOMContentLoaded", function () {
-    const tabBtns = document.querySelectorAll(".tab-btn");
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        const tabId = this.dataset.tab;
-
-        // Remove active class from all buttons and contents
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((b) => b.classList.remove("active"));
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((c) => c.classList.remove("active"));
-
-        // Add active class to clicked button and corresponding content
-        this.classList.add("active");
-        document.getElementById(tabId).classList.add("active");
-      });
+document.addEventListener("DOMContentLoaded", function() {
+    // Handle add to cart form submission
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showCartNotification(data.message);
+                    updateNavCartCount();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
-
-    // Variant selection
-    const variantOptions = document.querySelectorAll(".variant-option");
-    variantOptions.forEach((option) => {
-      option.addEventListener("click", function () {
-        variantOptions.forEach((opt) => opt.classList.remove("active"));
-        this.classList.add("active");
-      });
-    });
-
-    // Mobile menu toggle
-    const mobileMenu = document.getElementById("mobile-menu");
-    const navIcons = document.getElementById("nav-icons");
-    if (mobileMenu && navIcons) {
-      mobileMenu.addEventListener("click", function () {
-        navIcons.classList.toggle("active");
-      });
-    }
-  });
+});
 </script>
 {% endblock %}

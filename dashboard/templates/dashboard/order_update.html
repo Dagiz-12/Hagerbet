@@ -1,0 +1,37 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/styles.css' %}">
+</head>
+<body>
+
+
+{% block content %}
+<div class="content">
+    <h1 class="page-title">Update Order #{{ object.id }}</h1>
+    <div class="page-actions">
+    <a href="{% url 'dashboard:dashboard' %}" class="action-btn back">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+    
+    <div class="order-update-container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_status">Status:</label>
+                {{ form.status }}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="action-btn save">Save Changes</button>
+                <a href="{% url 'dashboard:order_detail' object.pk %}" class="action-btn cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

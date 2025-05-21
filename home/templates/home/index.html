@@ -1,10 +1,9 @@
 {% extends "nav.html" %} {% load static %}
 
-<!-- Something-->
+
 {% block title %} Hagerbet - Home {% endblock %}
 
-<!-- Something-->
-
+{% csrf_token %}  
 {% block content %}
 <!-- Section 1 - Categories -->
 <section class="section-1">
@@ -55,6 +54,7 @@
 
 <!-- Main Content -->
 <main class="main-content">
+{% csrf_token %}
   <section class="products-section">
     <div class="products-grid">
       {% if products_list %} {% for pro in products_list %}
@@ -71,7 +71,7 @@
           <h3>{{ pro.product_name }}</h3>
           <p>{{ pro.description|truncatechars:100 }}</p>
           <div class="product-price" data-price-original="{{ pro.price }}">
-            ${{ product.price }}
+            ${{ pro.price }}
           </div>
           <div class="product-buttons">
             <button
@@ -127,6 +127,7 @@
     <p>Hagerbet PLC 2025 ©</p>
   </div>
 </footer>
+
 
 {% endblock %} {% block extra_js %}
 <script>
@@ -219,30 +220,6 @@
 </script>
 
 <script>
-  document.querySelectorAll(".nav-icon").forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      // Close all other dropdowns first
-      document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
-        if (otherIcon !== icon) {
-          otherIcon.classList.remove("show-dropdown");
-        }
-      });
-
-      // Toggle current dropdown
-      icon.classList.toggle("show-dropdown");
-    });
-  });
-
-  // Close dropdowns when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".nav-icon")) {
-      document.querySelectorAll(".nav-icon").forEach((icon) => {
-        icon.classList.remove("show-dropdown");
-      });
-    }
-  });
-</script>
-<script>
   // Sidebar functionality
   document.addEventListener("DOMContentLoaded", function () {
     const openSidebar = document.getElementById("open-sidebar");
@@ -267,30 +244,6 @@
     document.addEventListener("click", function (e) {
       if (!e.target.closest("#sidebar") && !e.target.closest("#open-sidebar")) {
         if (sidebar) sidebar.classList.remove("active");
-      }
-    });
-
-    // Dropdown functionality for nav icons
-    document.querySelectorAll(".nav-icon").forEach((icon) => {
-      icon.addEventListener("click", (e) => {
-        // Close all other dropdowns first
-        document.querySelectorAll(".nav-icon").forEach((otherIcon) => {
-          if (otherIcon !== icon) {
-            otherIcon.classList.remove("show-dropdown");
-          }
-        });
-
-        // Toggle current dropdown
-        icon.classList.toggle("show-dropdown");
-      });
-    });
-
-    // Close dropdowns when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".nav-icon")) {
-        document.querySelectorAll(".nav-icon").forEach((icon) => {
-          icon.classList.remove("show-dropdown");
-        });
       }
     });
   });
