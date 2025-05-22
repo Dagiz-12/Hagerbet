@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from dashboard.views import generate_receipt_pdf
 
 app_name = 'dashboard'
 

@@ -100,6 +100,7 @@ RECAPTCHA_PROXY = {'http': 'http://proxy.example.com',
 
 # AUTHENTICATION SETTINGS
 
+LOGIN_URL = '/accounts/login/'
 
 LOGIN_REDIRECT_URL = '/profiles/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'

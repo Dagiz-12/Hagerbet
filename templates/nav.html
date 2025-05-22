@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -122,44 +121,32 @@
     <script src="{% static 'home/js/cart.js' %}"></script>
     <script src="{% static 'home/js/search.js' %}"></script>
     <script src="{% static 'home/js/currency.js' %}"></script>
-  </body>
+
   {% block extra_js %}
- <script>
-// nav.html dropdown fix
+  <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Account dropdown handler
-    function handleAccountDropdown(e) {
-        const icon = e.target.closest('.nav-icon.account');
-        if (!icon) return;
-
-        e.stopPropagation();
-        const wasOpen = icon.classList.contains('open');
-        
-        // Close all dropdowns
-        document.querySelectorAll('.nav-icon').forEach(el => 
-            el.classList.remove('open')
-        );
-        
-        // Toggle current dropdown
-        if (!wasOpen) icon.classList.add('open');
-    }
-
-    // Click outside handler
-    function closeAllDropdowns(e) {
-        if (!e.target.closest('.nav-icon')) {
-            document.querySelectorAll('.nav-icon').forEach(el => 
-                el.classList.remove('open')
-            );
-        }
-    }
-
-    // Event listeners
-    document.addEventListener('click', handleAccountDropdown);
-    document.addEventListener('click', closeAllDropdowns);
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeAllDropdowns(e);
+  const accountIcon = document.querySelector('.nav-icon.account');
+  
+  if (accountIcon) {
+    accountIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.classList.toggle('open');
     });
+
+    document.addEventListener('click', function(e) {
+      if (!accountIcon.contains(e.target)) {
+        accountIcon.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        accountIcon.classList.remove('open');
+      }
+    });
+  }
 });
 </script>
   {% endblock %}
+    </body>
 </html>

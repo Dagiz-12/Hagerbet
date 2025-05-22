@@ -6,6 +6,39 @@ from django.contrib import messages
 
 from .models import CustomUser
 from .forms import CustomerRegistrationForm, AdminUserCreationForm
+from .models import ActivityLog
+import json
+from django.http import JsonResponse
+from django.shortcuts import redirect
+
+
+#  mixins
+
+
+class StaffRequiredMixin(LoginRequiredMixin):
+    """Verify that the current user is staff or admin."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        if request.user.role not in [CustomUser.Role.ADMIN, CustomUser.Role.STAFF]:
+            messages.error(
+                request, "You don't have permission to access this page.")
+            # Redirect to home or appropriate page
+            return redirect('profiles:customer_profile')
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class CustomerAccessMixin:
+    """Ensure users can only access their own data."""
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.role == CustomUser.Role.CUSTOMER:
+            return qs.filter(id=self.request.user.id)
+        return qs
 
 
 class CustomerRegisterView(CreateView):
@@ -27,7 +60,7 @@ class CustomerRegisterView(CreateView):
         return super().form_valid(form)
 
 
-class AdminUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class AdminUserCreateView(StaffRequiredMixin, CreateView):
     model = CustomUser
     form_class = AdminUserCreationForm
     template_name = 'users/admin_user_form.html'
@@ -38,8 +71,14 @@ class AdminUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(
-            self.request, f'User {self.object.email} created successfully!')
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action=f"Created user {self.object.email}",
+            details=json.dumps({
+                'email': self.object.email,
+                'role': self.object.role
+            })
+        )
         return response
 
 
@@ -52,12 +91,11 @@ class UserDetailView(DetailView):
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'email', 'phone', 'address']
-    template_name = 'users/user_form.html'
+    template_name = 'users/users_form.html'
     success_url = reverse_lazy('users:main')
 
     def test_func(self):
-        # Only allow users to edit their own profile or admins
-        return self.request.user == self.get_object() or self.request.user.is_superuser
+        return self.request.user == self.get_object() or self.request.user.role in [CustomUser.Role.ADMIN, CustomUser.Role.STAFF]
 
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -70,13 +108,42 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user.is_superuser
 
 
-class MainusersView(LoginRequiredMixin, ListView):
+class MainusersView(StaffRequiredMixin, ListView):
     model = CustomUser
     template_name = 'users/main.html'
     context_object_name = 'users_list'
 
     def get_queryset(self):
-        # For non-admins, only show their own profile
-        if not self.request.user.is_superuser:
-            return CustomUser.objects.filter(id=self.request.user.id)
-        return CustomUser.objects.all()
+        if self.request.user.role == CustomUser.Role.ADMIN:
+            return CustomUser.objects.all()
+        return CustomUser.objects.filter(role=CustomUser.Role.CUSTOMER)
+
+
+class ActivityLogView(StaffRequiredMixin, ListView):
+    model = ActivityLog
+    template_name = 'users/activity_log.html'
+    context_object_name = 'logs'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return ActivityLog.objects.all().order_by('-timestamp')
+
+
+class StaffRegisterView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = CustomUser
+    form_class = AdminUserCreationForm
+    template_name = 'users/staff_register.html'
+    success_url = reverse_lazy('users:main')
+
+    def test_func(self):
+        # Only allow admins to create staff
+        return self.request.user.role == CustomUser.Role.ADMIN
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.role = CustomUser.Role.STAFF
+        user.is_staff = True
+        user.save()
+        messages.success(
+            self.request, f'Staff user {user.email} created successfully!')
+        return super().form_valid(form)

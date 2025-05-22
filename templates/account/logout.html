@@ -1,20 +1,61 @@
+{% extends "base.html" %}  <!-- Assuming you have a base template -->
+{% load static i18n %}
 
-{% load i18n %}
-{% block head_title %}
-    {% trans "Sign Out" %}
-{% endblock head_title %}
+{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+
 {% block content %}
-<h1>
-    {% trans "Sign Out" %}
-</h1>
-<p>
-    {% trans "Are you sure you want to sign out?" %}
-</p>
-{% url 'account_logout' as action_url %}
-<form method="post" action="{{ action_url }}">
-    {% csrf_token %}
-    <button type="submit">
-        {% trans "Sign Out" %}
-    </button>
-</form>
-{% endblock content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img src="{% static 'home/images/paladin-6539115_640.png' %}" alt="Logo" height="50" class="mb-3">  <!-- Update with your logo -->
+                        <h2 class="h4">{% trans "Sign Out" %}</h2>
+                    </div>
+                    
+                    <p class="text-muted text-center mb-4">
+                        {% trans "Are you sure you want to sign out?" %}
+                    </p>
+                    
+                    {% url 'account_logout' as action_url %}
+                    <form method="post" action="{{ action_url }}" class="text-center">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                {% trans "Sign Out" %}
+                            </button>
+                            <a href="{% url 'home:home' %}" class="btn btn-outline-secondary">
+                                {% trans "Cancel" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3">
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        border-color: #b02a37;
+    }
+</style>
+{% endblock %}

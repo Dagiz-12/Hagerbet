@@ -1,5 +1,3 @@
-[file name]: profiles.html
-[file content begin]
 {% extends "nav.html" %}
 {% block content %}
 <div class="profile-container">
@@ -23,33 +21,36 @@
             <div class="profile-actions">
                 <a href="{% url 'profiles:profile_update' %}" class="btn btn-primary">Edit Profile</a>
             </div>
-             <div class="continue-shopping">
-        <a href="{% url 'home:home' %}" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Continue Shopping
-        </a>
-    </div>
+            <div class="continue-shopping">
+                <a href="{% url 'home:home' %}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Continue Shopping
+                </a>
+            </div>
         </div>
     </div>
 
+   
     <div class="profile-section">
         <h2>Order History</h2>
         {% if orders %}
             <table class="order-table">
                 <thead>
                     <tr>
-                        <th>Order #</th>
+                        <th>Order Number</th>
                         <th>Date</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Payment Method</th>  <!-- Added new column -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for order in orders %}
                     <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.created_at|date:"M d, Y" }}</td>
-                        <td>{{ order.get_status_display }}</td>
-                        <td>${{ order.total_amount }}</td>
+                        <td><a href="{% url 'dashboard:order_detail' order.id %}">#{{ order.id }}</a></td>
+                        <td>{{ order.order_date|date:"M d, Y" }}</td>  <!-- Changed to order_date -->
+                        <td><span class="status-badge status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+                        <td>${{ order.total_price|floatformat:2 }}</td>  <!-- Changed to total_price -->
+                        <td>{{ order.payment_method }}</td>  <!-- Added payment method -->
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -133,7 +134,7 @@
         color: white;
     }
 
-     .continue-shopping {
+    .continue-shopping {
         margin-top: 2rem;
         text-align: center;
     }
@@ -144,6 +145,59 @@
         align-items: center;
         gap: 0.5rem;
     }
+
+    /* Status badge styles */
+    .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-processing {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+      .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-processing {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
 </style>
 {% endblock %}
-[file content end]

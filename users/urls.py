@@ -5,7 +5,9 @@ from .views import (
     UserDetailView,
     UserUpdateView,
     UserDeleteView,
-    MainusersView
+    MainusersView,
+    ActivityLogView,
+    StaffRegisterView,
 )
 
 app_name = 'users'
@@ -16,4 +18,6 @@ urlpatterns = [
     path('<int:pk>/', UserDetailView.as_view(), name='detail'),
     path('<int:pk>/update/', UserUpdateView.as_view(), name='update'),
     path('<int:pk>/delete/', UserDeleteView.as_view(), name='delete'),
+    path('activity-logs/', ActivityLogView.as_view(), name='activity_logs'),
+    path('staff/register/', StaffRegisterView.as_view(), name='staff_register'),
 ]

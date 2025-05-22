@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Activity Logs</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{% if log.user %}{{ log.user.email }}{% else %}System{% endif %}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.details }}</td>
+                <td>{{ log.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

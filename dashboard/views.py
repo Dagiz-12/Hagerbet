@@ -17,8 +17,27 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 import json
 
+from users.views import StaffRequiredMixin
+from django.contrib import messages
+import json
+from users.models import ActivityLog
+from django.utils.timezone import now
 
-class HomeView(LoginRequiredMixin, View):
+
+def create_activity_log(user, action, details=""):
+    ActivityLog.objects.create(
+        user=user,
+        action=action,
+        details=details
+    )
+
+
+class HomeView(StaffRequiredMixin, View):
+
+    def get(self, request):
+        # Log dashboard access
+        create_activity_log(request.user, "Accessed dashboard")
+
     def get(self, request):
         # Get recent orders (last 5)
         recent_orders = Orders.objects.all().order_by('-order_date')[:5]
@@ -48,11 +67,16 @@ class HomeView(LoginRequiredMixin, View):
         return render(request, 'dashboard/dashboard.html', context)
 
 
-class OrderHistoryView(LoginRequiredMixin, ListView):
+class OrderHistoryView(StaffRequiredMixin, ListView):
     model = Orders
     template_name = 'dashboard/order_history.html'
     context_object_name = 'orders'
     paginate_by = 10
+
+    # activity loging
+    def get(self, request, *args, **kwargs):
+        create_activity_log(request.user, "Viewed order history")
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('-order_date')
@@ -75,22 +99,44 @@ class OrderHistoryView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class OrderDetailView(LoginRequiredMixin, DetailView):
+class OrderDetailView(StaffRequiredMixin, DetailView):
     model = Orders
     template_name = 'dashboard/order_detail.html'
     context_object_name = 'order'
 
+    # Activity loging
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        order = self.get_object()
+        create_activity_log(
+            request.user,
+            f"Viewed order details #{order.id}",
+            f"Order status: {order.status}"
+        )
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Debug output - check your console
-        print("Order Items:", self.object.order_items)
+        # print("Order Items:", self.object.order_items)
         return context
 
 
-class OrderUpdateView(LoginRequiredMixin, UpdateView):
+class OrderUpdateView(StaffRequiredMixin, UpdateView):
     model = Orders
     fields = ['status']
     template_name = 'dashboard/order_update.html'
+
+    # Activity Loging
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        create_activity_log(
+            self.request.user,
+            f"Updated order #{self.object.id} status",
+            f"New status: {self.object.status}"
+        )
+        return response
 
     def get_success_url(self):
         messages.success(
@@ -109,6 +155,13 @@ def process_order(request, pk, action):
         elif action == 'deliver':
             order.status = 'Delivered'
         order.save()
+        # loging activity
+
+        create_activity_log(
+            request.user,
+            f"Changed order #{order.id} status to {order.status}",
+            f"Action: {action}"
+        )
         return JsonResponse({
             'success': True,
             'message': f'Order #{order.id} has been marked as {order.status}'

@@ -1424,6 +1424,36 @@ body {
   font-size: 0.8rem;
 }
 
+/* Hide dropdown by default */
+
+.nav-icon.account {
+  position: relative;
+}
+
+.nav-icon .dropdown-content {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: white;
+  min-width: 220px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  padding: 12px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+/* Show dropdown when .open is present */
+.nav-icon.open .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
   .search-bar {
